@@ -167,6 +167,16 @@ namespace _T3._1__WebRequest_con_BestBuy
                     break;
                 Uri uri = response.ResponseUri;
 
+                /* Si la URL anterior es igual a la actual, romper ciclo.
+                 * De otra forma se estará accediendo a la misma una y otra vez
+                 *  porque hay búsquedas que redirigen a otras URLs que no son
+                 *  las que nosotros buscamos.**/
+                if (lastURL.Equals(uri.AbsoluteUri) || uri.AbsoluteUri.Equals(onceRedirectedURL))
+                    break;
+                else /* Si la URL anterior no es igual a la actual, guardar esta como
+                      * la nueva anterior.**/
+                    lastURL = uri.AbsoluteUri;
+
                 /* Si nos redirige, irnos moviéndonos de página para
                  *  ver si hay más, si no, nos seguirá redirigiendo a la misma.**/
                 if (uri.AbsoluteUri.Contains("searchRedirect") && !searchRedirectFound)
@@ -180,17 +190,14 @@ namespace _T3._1__WebRequest_con_BestBuy
                      *  Si el último índice de esa cadena es igual al tamaño
                      *      de la cadena del URL, ignorar y continuar con la búsqueda
                      *      en la siguiente página.**/
-                    if(uri.AbsoluteUri.IndexOf("searchRedirect=" + query) + ("searchRedirect=" + query).Length == uri.AbsoluteUri.Length)
+                    if (uri.AbsoluteUri.IndexOf("searchRedirect=" + query) + ("searchRedirect=" + query).Length == uri.AbsoluteUri.Length)
                     {
-                        /* Aumentar el contador de página. Esto porque hará un continue y reiniciará
-                         *  el ciclo sin avanzar al otro pageCounter.**/
-                        pageCounter++;
-                        if(uri.AbsoluteUri.Contains("&searchRedirect="))
+                        if (uri.AbsoluteUri.Contains("&searchRedirect="))
                             /* Hay que tomar el nuevo URL pero sin el "&searchRedirect=".**/
                             baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("&searchRedirect="));
                         else
                             /* Hay URL que no tienen el ampersand "&" antes del parámetro searchRedirect.**/
-                            if(uri.AbsoluteUri.Contains("searchRedirect="))
+                            if (uri.AbsoluteUri.Contains("searchRedirect="))
                                 baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("searchRedirect="));
                         /* Si el enlace ya tiene algunos de los elementos de la consulta,
                          *  ya no agregarlos.**/
@@ -200,32 +207,41 @@ namespace _T3._1__WebRequest_con_BestBuy
                             addSortBy = false;
                         if (uri.AbsoluteUri.Contains("&page="))
                             addPageNumber = false;
-                        /* Continue para ya no seguir con los siguientes procesos.**/
-                        continue;
+                        /* Continue para ya no seguir con los siguientes procesos.
+                         * 
+                         * - NO SE NECESITA EL CONTINUE PORQUE NECESITA REVISAR EL SITIO ACTUAL,
+                         * luego ya cambiará a la página 2 (o la siguiente).**/
+                        //continue;
                     }
-                        
-                    /* Reiniciar contador para buscar en las páginas hacia donde nos redirigieron.**/
-                    pageCounter = 1;
+                    else
+                        /* Si vuelve a redirigir a la misma página, break.**/
+                        if (searchRedirectFound)
+                            break;
+                    /* Reiniciar contador para buscar en las páginas hacia donde nos redirigieron.
+                     * 
+                     * - Ya vi que volverá a redirigir a la misma, así que lo mejor sería
+                     * aumentar el contador.**/
+                    // pageCounter = 1;
+                    /* Aumentar el contador de página. Esto porque hará un continue y reiniciará
+                         *  el ciclo sin avanzar al otro pageCounter.**/
+                    pageCounter++;
                     /* Hay que guardar esta URL por si nos vuelve a redirigir, ya no repetir proceso.**/
                     onceRedirectedURL = uri.AbsoluteUri;
                     //currentPageURL = uri.AbsoluteUri + "&page=" + pageCounter;
+                    
                     /* Hacemos la base el nuevo enlace al que se redirigió. Esto 
-                     * encontrando el último índice de la subcadena que lo indica.**/
-                    baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("&searchRedirect=") + "&searchRedirect=".Length);
+                     * encontrando el último índice de la subcadena que lo indica.
+                     * 
+                     * - Ya no es necesario hacer esto porque ya se hace arriba.**/
+                    // baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("&searchRedirect=") + "&searchRedirect=".Length);
+                    
                     /* Indicar que ya se encontró el texto.**/
                     searchRedirectFound = true;
-                    continue;
+                    /*
+                     * - NO SE NECESITA EL CONTINUE PORQUE NECESITA REVISAR EL SITIO ACTUAL,
+                     * luego ya cambiará a la página 2 (o la siguiente).**/
+                    //continue;
                 }
-
-                /* Si la URL anterior es igual a la actual, romper ciclo.
-                 * De otra forma se estará accediendo a la misma una y otra vez
-                 *  porque hay búsquedas que redirigen a otras URLs que no son
-                 *  las que nosotros buscamos.**/
-                if (lastURL.Equals(uri.AbsoluteUri) || uri.AbsoluteUri.Equals(onceRedirectedURL))
-                    break;
-                else /* Si la URL anterior no es igual a la actual, guardar esta como
-                      * la nueva anterior.**/
-                    lastURL = uri.AbsoluteUri;
 
                 /* Mensajes en consola para comprobar que la URL se esté manejando
                  *  correctamente.**/
@@ -274,8 +290,8 @@ namespace _T3._1__WebRequest_con_BestBuy
                  * - FUENTE: [StackOverflow] Identify if a string is a number 
                  *    https://stackoverflow.com/questions/894263/identify-if-a-string-is-a-number#:~:text=If%20you%20want%20to%20know%20if%20a%20string%20is%20a,check%20if%20your%20parsing%20succeeded.
                  * **/
-                if (int.TryParse(webpageSourceCode.Substring(currentIndex, 1), out _))
-                    productsInPage += webpageSourceCode.Substring(currentIndex, 1);
+                if (int.TryParse(substrInCurrIndex.Substring(currentIndex, 1), out _))
+                    productsInPage += substrInCurrIndex.Substring(currentIndex, 1);
                 /* Ahora hacemos un ciclo para crear cada objeto con su nombre
                  *  y URL.**/
                 for(int i = 0; i < int.Parse(productsInPage); i++)
@@ -301,8 +317,12 @@ namespace _T3._1__WebRequest_con_BestBuy
                      * Después del nombre del producto vienen estos caracteres:
                      *      [ \", ] por lo cual serán los delimitadores para la subcadena.**/
                     int lastIndex = substrInCurrIndex.IndexOf(@"\"",");
-                    /* Ahora obtener el nombre desde el índice actual hasta el último.**/
-                    productName = substrInCurrIndex.Substring(currentIndex, lastIndex);
+                    /* Ahora obtener el nombre desde el índice actual hasta el último.
+                     * Como la nueva subcadena ya comienza desde el índice actual entonces
+                     *  el primer parámetro de la subcadena será 0.
+                     *  - Esto quiere decir que la cadena empieza desde el inicio
+                     *  del nombre del producto hasta su fin.**/
+                    productName = substrInCurrIndex.Substring(0, lastIndex);
 
                     /* Ahora hay que OBTENER EL URL DEL PRODUCTO. 
                      * Las incidencias son:
@@ -321,7 +341,10 @@ namespace _T3._1__WebRequest_con_BestBuy
                      * Después del nombre del producto vienen estos caracteres:
                      *      [ \", ] por lo cual serán los delimitadores para la subcadena.**/
                     lastIndex = substrInCurrIndex.IndexOf(@"\"",");
-                    productURL = substrInCurrIndex.Substring(currentIndex, lastIndex);
+                    /* Al igual que el nombre, el enlace se guarda desde el 0 hasta el último
+                     *  índice, ya que la cadena actualmente comienza desde el inicio
+                     *  del enlace.**/
+                    productURL = substrInCurrIndex.Substring(0, lastIndex);
 
                     /* Si llegó hasta aquí significa que no ha pasado la última
                      *  página y podemos instanciar un elemento de producto.**/
