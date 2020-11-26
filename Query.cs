@@ -243,14 +243,9 @@ namespace _T3._1__WebRequest_con_BestBuy
                     //continue;
                 }
 
-                /* Mensajes en consola para comprobar que la URL se esté manejando
-                 *  correctamente.**/
-                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.AbsoluteUri);
-                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.PathAndQuery);
-                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.AbsolutePath);
-                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.ToString());
-                /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
 
+                /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
+                //ShowUriInfo(uri);
                 
 
                 // Display the content.
@@ -271,6 +266,11 @@ namespace _T3._1__WebRequest_con_BestBuy
                  * Irá cambiando cada que cambie el índice.**/
                 string substrInCurrIndex = webpageSourceCode.Substring(currentIndex, webpageSourceCode.Length - currentIndex);
                 //currentIndex = substrInCurrIndex.IndexOf("\"totalCount\":") + "\"totalCount\":".Length;
+                
+                
+                /* Ya vi que el totalCount no indica el número de elementos de la página actual,
+                 *  sino el número de elementos en todas las páginas de esa búsqueda.
+                 * - Mejor haré una condición diferente de si ya no existen objetos o algo así.**/
                 currentIndex = substrInCurrIndex.IndexOf(@"\""totalCount\"":") + @"\""totalCount\"":".Length;
                 //currentIndex = substrInCurrIndex.IndexOf(@"\""totalCount\"":");
                 
@@ -294,7 +294,11 @@ namespace _T3._1__WebRequest_con_BestBuy
                     productsInPage += substrInCurrIndex.Substring(currentIndex, 1);
                 /* Ahora hacemos un ciclo para crear cada objeto con su nombre
                  *  y URL.**/
-                for(int i = 0; i < int.Parse(productsInPage); i++)
+                //for(int i = 0; i < int.Parse(productsInPage); i++)
+
+                /* Ciclo que seguirá iterando si encuentra desde el índice actual el 
+                 *  delimitador de nombre de objeto.**/
+                while(substrInCurrIndex.Contains(@"\""title\"":\"""))
                 {
                     substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
                     /* NOMBRE DEL PRODUCTO: \"title\":\"
@@ -346,6 +350,10 @@ namespace _T3._1__WebRequest_con_BestBuy
                      *  del enlace.**/
                     productURL = substrInCurrIndex.Substring(0, lastIndex);
 
+                    /* Llevar la subcadena al último índice de incidencia
+                     *  para que el while verifique correctamente si
+                     *  se encuentra algún producto restante o no.**/
+                    substrInCurrIndex.Substring(lastIndex, substrInCurrIndex.Length - lastIndex);
                     /* Si llegó hasta aquí significa que no ha pasado la última
                      *  página y podemos instanciar un elemento de producto.**/
                     productList.Add(new Product(productName, productURL));
@@ -433,6 +441,15 @@ namespace _T3._1__WebRequest_con_BestBuy
              * en el Form1.cs.**/
             
             return false; /* No se pudo hacer la búsqueda.**/
+        }
+        static private void ShowUriInfo(Uri uri)
+        {
+            /* Mensajes en consola para comprobar que la URL se esté manejando
+             *  correctamente.**/
+            Console.WriteLine("\n - URI DE RESPUESTA: " + uri.AbsoluteUri);
+            Console.WriteLine("\n - URI DE RESPUESTA: " + uri.PathAndQuery);
+            Console.WriteLine("\n - URI DE RESPUESTA: " + uri.AbsolutePath);
+            Console.WriteLine("\n - URI DE RESPUESTA: " + uri.ToString());
         }
     }
 }
