@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace _T3._1__WebRequest_con_BestBuy
 {
-    public partial class Form1 : Form
+    public partial class SearchWindow : Form
     {
-        public Form1()
+        public SearchWindow()
         {
             InitializeComponent();
         }

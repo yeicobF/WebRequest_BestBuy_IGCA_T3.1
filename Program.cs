@@ -16,7 +16,7 @@ namespace _T3._1__WebRequest_con_BestBuy
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new SearchWindow());
         }
     }
 }
