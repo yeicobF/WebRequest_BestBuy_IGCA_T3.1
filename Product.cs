@@ -28,7 +28,20 @@ namespace _T3._1__WebRequest_con_BestBuy
          *      en los detalles del producto.
          * - releaseDate también es opcional. No sale en todos los productos. **/
         string name, url, model, publisher, sku, price, rating, description, releaseDate;
-        Product(string name, string url)
+        /* Manejo de variables con propiedades para utilizar un
+         *  Getter sin tener que poner Product.GetName(), sino
+         *  Product.Name, sin más.
+         * 
+         * FUENTE: [StackOverflow] Looking for a short & simple example of getters/setters in C#
+         *  https://stackoverflow.com/questions/11159438/looking-for-a-short-simple-example-of-getters-setters-in-c-sharp
+         * **/
+        public string Name
+        {
+            get { return name; }
+        }
+        /* Lo mismo que arriba pero en una línea.**/
+        public string URL { get { return url; } }
+        public Product(string name, string url)
         {
             this.name = name;
             this.url = url;

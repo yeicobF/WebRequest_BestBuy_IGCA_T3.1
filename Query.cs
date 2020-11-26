@@ -253,9 +253,18 @@ namespace _T3._1__WebRequest_con_BestBuy
                 /* Subcadena que irá del índice actual al último índice de la cadena
                  *  que contiene todo el código fuente del sitio web.
                  * Irá cambiando cada que cambie el índice.**/
-                string substrCurrIndex = webpageSourceCode.Substring(currentIndex, webpageSourceCode.Length - currentIndex);
-                currentIndex = substrCurrIndex.IndexOf("\"totalCount\":") + "\"totalCount\":".Length;
-                productsInPage = webpageSourceCode.Substring(currentIndex, 1);
+                string substrInCurrIndex = webpageSourceCode.Substring(currentIndex, webpageSourceCode.Length - currentIndex);
+                //currentIndex = substrInCurrIndex.IndexOf("\"totalCount\":") + "\"totalCount\":".Length;
+                currentIndex = substrInCurrIndex.IndexOf(@"\""totalCount\"":") + @"\""totalCount\"":".Length;
+                //currentIndex = substrInCurrIndex.IndexOf(@"\""totalCount\"":");
+                
+                /* No puedo hacer la búsqueda en la cadena original porque el índice es de
+                 *  la subcadena creada, el cual es diferente porque es más pequeña
+                 *  que la original. A partir de ahora se debe manejar la original.**/
+                //productsInPage = webpageSourceCode.Substring(currentIndex, 1);
+                /* Reiniciar la cadena.**/
+                // productsInPage = "";
+                productsInPage = substrInCurrIndex.Substring(currentIndex, 1);
                 currentIndex++;
                 /* Revisamos si el siguiente caracter también es un número.
                  * Si sí es un número, concatenarlo a la cadena del número
@@ -271,7 +280,7 @@ namespace _T3._1__WebRequest_con_BestBuy
                  *  y URL.**/
                 for(int i = 0; i < int.Parse(productsInPage); i++)
                 {
-                    substrCurrIndex = webpageSourceCode.Substring(currentIndex, webpageSourceCode.Length - currentIndex);
+                    substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
                     /* NOMBRE DEL PRODUCTO: \"title\":\"
                      * - Este se busca de la siguiente manera:
                      *      @"\""title\"":\"""
@@ -284,13 +293,42 @@ namespace _T3._1__WebRequest_con_BestBuy
                      * FUENTE: [StackOverflow] How to use “\” in a string without making it an escape sequence - C#?
                      *  https://stackoverflow.com/questions/1768023/how-to-use-in-a-string-without-making-it-an-escape-sequence-c
                      * **/
-                    currentIndex = substrCurrIndex.IndexOf(@"\""title\"":\""");
+                    currentIndex = substrInCurrIndex.IndexOf(@"\""title\"":\""") + @"\""title\"":\""".Length;
+                    /* Aquí tenemos la cadena del índice en donde comienza el título del producto
+                     *  hasta el final de todo el código fuente.**/
+                    substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
+                    /* Ahora hay que obtener el nombre del producto.
+                     * Después del nombre del producto vienen estos caracteres:
+                     *      [ \", ] por lo cual serán los delimitadores para la subcadena.**/
+                    int lastIndex = substrInCurrIndex.IndexOf(@"\"",");
+                    /* Ahora obtener el nombre desde el índice actual hasta el último.**/
+                    productName = substrInCurrIndex.Substring(currentIndex, lastIndex);
+
+                    /* Ahora hay que OBTENER EL URL DEL PRODUCTO. 
+                     * Las incidencias son:
+                     *      INICIO: \"seoPdpUrl\":\"
+                     *      FINAL: \",
+                     * **/
+                    /* Ahora hacemos que la subcadena comience del último caracter
+                     *  del nombre del producto para buscar desde ahí.**/
+                    substrInCurrIndex.Substring(lastIndex, substrInCurrIndex.Length - lastIndex);
+                    /* Ahora buscar la incidencia del URL.**/
+                    currentIndex = substrInCurrIndex.IndexOf(@"\""seoPdpUrl\"":\""") + @"\""seoPdpUrl\"":\""".Length;
+                    /* Aquí tenemos la cadena del índice en donde comienza el título del producto
+                     *  hasta el final de todo el código fuente.**/
+                    substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
+                    /* Ahora hay que obtener el nombre del producto.
+                     * Después del nombre del producto vienen estos caracteres:
+                     *      [ \", ] por lo cual serán los delimitadores para la subcadena.**/
+                    lastIndex = substrInCurrIndex.IndexOf(@"\"",");
+                    productURL = substrInCurrIndex.Substring(currentIndex, lastIndex);
 
                     /* Si llegó hasta aquí significa que no ha pasado la última
                      *  página y podemos instanciar un elemento de producto.**/
-                    //productList.Add(new Product(, uri.AbsoluteUri));
+                    productList.Add(new Product(productName, productURL));
+                    /* Imprimir para ver si los objetos se crearon correctamente.**/
+                    Console.WriteLine("\n\n - PRODUCTO CREADO: Nombre: " + productList.ElementAt(productList.Count - 1).Name + ", URL: " + productList.ElementAt(productList.Count - 1).URL);
                 }
-                //productName = webpageSourceCode.Substring();
 
                 pageCounter++;
                 /* Esta cadena en el código fuente de la página indica
