@@ -40,38 +40,33 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  parámetros directamente del tipo de dato, y
          *  crearé variables de cadenas ya específicas. De 
          *  esta manera se da a entender mejor el proceso. **/
-        public static void SearchQuery(TextBox _query, ComboBox _sortBy)
+        public static void SearchQuery(TextBox _query, string sortBy)
         {
             string query = _query.Text;
             /* Cadena que guardará la forma de ordenamiento de la búsqueda.
              * Así es como se accede a un elemento de la ComboBox y se pasa
              *  a cadena. **/
-            string sortBy = _sortBy.SelectedItem.ToString();
             /* currentURL: Será el URL para buscar TODOS los elementos
              *  de la página actual. Se iterará hasta que ya no existan
              *  más páginas.
              * productURL: La URL de cada producto.
              * productName: El nombre de cada producto.**/
-            string currentPageURL, productURL = "", productName = "";
+            string currentPageURL = "", productURL = "", productName = "";
             /* baseURL: URL base para TODAS las búsquedas de Best Buy. **/
-            string baseURL = "https://www.bestbuy.com.mx/c/buscar-best-buy/buscar?query=";
+            string baseURL = "https://www.bestbuy.com.mx/c/buscar-best-buy/buscar?";
             /* lastURL: El anterior URL para verificar que no se haga
              *  la solicitud al sitio más de una vez.
              * onceRedirectedURL: Para verificar que no nos vuelva a
              *  redirigir a un sitio en donde ya estuvimos.**/
-            string responseFromServer = "", lastURL = "", onceRedirectedURL = "";
-            /* bool para indicar que ya se encontró un searchRedirect.**/
+            string webpageSourceCode = "", lastURL = "", onceRedirectedURL = "";
+            /* bool para indicar que ya se encontró un searchRedirect, el
+             *  cual indica que el enlace al que hicimos la petición
+             *  nos redirigió a otra página.**/
             bool searchRedirectFound = false;
             /* bool para ver qué valores se agregarán al URL.**/
             bool addQuery = true, addSortBy = true, addPageNumber = true;
-            HttpWebResponse response;
-            Stream dataStream = null;
-            StreamReader reader = null;
-
-            /* Hay que limpiar la lista porque es estático por si
-             *  tiene elementos.**/
-            if (productList.Count > 0)
-                productList.Clear();
+            /* Variable que guardará el índice actual en la consulta de productos de cada página. **/
+            int currentIndex;
             /* Para hacer la búsqueda hay que hacer un String.Trim()
              *     para que busque sin los espacios al inicio o
              *     al final por si se ingresó así la búsqueda.
@@ -83,13 +78,28 @@ namespace _T3._1__WebRequest_con_BestBuy
             /* Iterador para las páginas de los sitios web.
              * Los números de página comienzan desde el 1.**/
             int pageCounter = 1;
+            /* Número de productos que se encuentran en la página actual.**/
+            string productsInPage;
+            HttpWebResponse response;
+            Stream dataStream = null;
+            StreamReader reader = null;
+
+            /* Hay que limpiar la lista porque es estático por si
+             *  tiene elementos.**/
+            if (productList.Count > 0)
+                productList.Clear();
             /* Necesito que haga el procedimiento antes que la verificación
              *  de la condición. Es decir, que primero haga la solicitud y
              *  luego verifique. Podría poner un bloque "Try-Catch" para
              *  cuando no encuentre más páginas en la búsqueda y salta una
              *  excepción, así terminar el proceso.**/
-            do
+            /* Ciclo infinito hasta que no se encuentren más páginas o
+             *  las páginas se empiecen a ciclar. Ahí es cuando se saldrá
+             *  del ciclo con un break.**/
+            while(true)
             {
+                /* Inicializar el índice.**/
+                currentIndex = 0;
                 /* Si atrapa una excepción significa que no encontró
                  *  más páginas y podemos terminar el proceso.
                  * Solo terminará el ciclo cuando se entre al catch.
@@ -97,16 +107,15 @@ namespace _T3._1__WebRequest_con_BestBuy
                  *  más fácil identificar el patrón. La cuestión es
                  *  que solo se puede hacer concatenando, entonces
                  *  antes de hacerlo cada vez tengo que reiniciar la cadena.**/
-                currentPageURL = "";
                 currentPageURL = baseURL;
                 /* Agregar de uno por uno si lo indicamos.
                  * Esto por si hay un URL que tengo que tomar
                  *  como el URI base y ya tiene estos elementos.
                  * Si los agrego el URL se empieza a agrandar mal.**/
                 if (addQuery)
-                    currentPageURL += query;
+                    currentPageURL += "query=" + query;
                 if(addSortBy)
-                    currentPageURL += "&sort=Best-Match";
+                    currentPageURL += "&sort=" + sortBy;
                 if(addPageNumber)
                     currentPageURL += "&page=" + pageCounter;
                 else /* Si no, solo agregamos el número.**/
@@ -138,74 +147,9 @@ namespace _T3._1__WebRequest_con_BestBuy
 
                 // Get the response.
                 response = (HttpWebResponse)request.GetResponse();
-                Uri s = response.ResponseUri;
-
-                /* Si nos redirige, irnos moviéndonos de página para
-                 *  ver si hay más, si no, nos seguirá redirigiendo a la misma.**/
-                if (s.AbsoluteUri.Contains("searchRedirect") && !searchRedirectFound)
-                {
-                    /* Hay ocasiones en que el "searchRedirect" está al final de
-                     *  la URL y no al inicio. En esos casos no podemos concatenarle
-                     *  la consulta porque crecerá exponencialmente. Ahí simplemente
-                     *  lo ignoramos y continuamos con el conteo normal de páginas.
-                     *  Ese al menos fue el comportamiento que vi con la búsqueda
-                     *      de "Bose".
-                     *  Si el último índice de esa cadena es igual al tamaño
-                     *      de la cadena del URL, ignorar y continuar con la búsqueda
-                     *      en la siguiente página.**/
-                    if(s.AbsoluteUri.IndexOf("searchRedirect=" + query) + ("searchRedirect=" + query).Length == s.AbsoluteUri.Length)
-                    {
-                        /* Aumentar el contador de página. Esto porque hará un continue y reiniciará
-                         *  el ciclo sin avanzar al otro pageCounter.**/
-                        pageCounter++;
-                        /* Hay que tomar el nuevo URL pero sin el "&searchRedirect=".**/
-                        baseURL = s.AbsoluteUri.Substring(0, s.AbsoluteUri.IndexOf("&searchRedirect="));
-                        /* Si el enlace ya tiene algunos de los elementos de la consulta,
-                         *  ya no agregarlos.**/
-                        if (s.AbsoluteUri.Contains("query="))
-                            addQuery = false;
-                        if (s.AbsoluteUri.Contains("&sort="))
-                            addSortBy = false;
-                        if (s.AbsoluteUri.Contains("&page="))
-                            addPageNumber = false;
-                        /* Continue para ya no seguir con los siguientes procesos.**/
-                        continue;
-                    }
-                        
-                    /* Reiniciar contador para buscar en las páginas hacia donde nos redirigieron.**/
-                    pageCounter = 1;
-                    /* Hay que guardar esta URL por si nos vuelve a redirigir, ya no repetir proceso.**/
-                    onceRedirectedURL = s.AbsoluteUri;
-                    //currentPageURL = s.AbsoluteUri + "&page=" + pageCounter;
-                    /* Hacemos la base el nuevo enlace al que se redirigió. Esto 
-                     * encontrando el último índice de la subcadena que lo indica.**/
-                    baseURL = s.AbsoluteUri.Substring(0, s.AbsoluteUri.IndexOf("&searchRedirect=") + "&searchRedirect=".Length);
-                    /* Indicar que ya se encontró el texto.**/
-                    searchRedirectFound = true;
-                    continue;
-                }
-
-                /* Si la URL anterior es igual a la actual, romper ciclo.
-                 * De otra forma se estará accediendo a la misma una y otra vez
-                 *  porque hay búsquedas que redirigen a otras URLs que no son
-                 *  las que nosotros buscamos.**/
-                if (lastURL.Equals(s.AbsoluteUri) || s.AbsoluteUri.Equals(onceRedirectedURL))
-                    break;
-                else /* Si la URL anterior no es igual a la actual, guardar esta como
-                      * la nueva anterior.**/
-                    lastURL = s.AbsoluteUri;
-
-                /* Mensajes en consola para comprobar que la URL se esté manejando
-                 *  correctamente.**/
-                Console.WriteLine("\n - URI DE RESPUESTA: " + s.AbsoluteUri);
-                Console.WriteLine("\n - URI DE RESPUESTA: " + s.PathAndQuery);
-                Console.WriteLine("\n - URI DE RESPUESTA: " + s.AbsolutePath);
-                Console.WriteLine("\n - URI DE RESPUESTA: " + s.ToString());
-                /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
-
                 // Display the status.
                 // Aquí escribimos el estado en la consola.
-                Console.WriteLine(response.StatusDescription);
+                //Console.WriteLine(response.StatusDescription);
 
                 // Get the stream containing content returned by the server.
                 // Aquí se guarda un archivo en memoria con la información obtenida en el response.
@@ -217,13 +161,136 @@ namespace _T3._1__WebRequest_con_BestBuy
 
                 // Read the content.
                 // Guardamos el texto del archivo guardado en memoria para luego mostrarlo.
-                responseFromServer = reader.ReadToEnd();
+                webpageSourceCode = reader.ReadToEnd();
+                /* Si es la última página, salir del ciclo y no instanciar un nuevo producto.**/
+                if (IsLastWebPage(webpageSourceCode))
+                    break;
+                Uri uri = response.ResponseUri;
+
+                /* Si nos redirige, irnos moviéndonos de página para
+                 *  ver si hay más, si no, nos seguirá redirigiendo a la misma.**/
+                if (uri.AbsoluteUri.Contains("searchRedirect") && !searchRedirectFound)
+                {
+                    /* Hay ocasiones en que el "searchRedirect" está al final de
+                     *  la URL y no al inicio. En esos casos no podemos concatenarle
+                     *  la consulta porque crecerá exponencialmente. Ahí simplemente
+                     *  lo ignoramos y continuamos con el conteo normal de páginas.
+                     *  Ese al menos fue el comportamiento que vi con la búsqueda
+                     *      de "Bose".
+                     *  Si el último índice de esa cadena es igual al tamaño
+                     *      de la cadena del URL, ignorar y continuar con la búsqueda
+                     *      en la siguiente página.**/
+                    if(uri.AbsoluteUri.IndexOf("searchRedirect=" + query) + ("searchRedirect=" + query).Length == uri.AbsoluteUri.Length)
+                    {
+                        /* Aumentar el contador de página. Esto porque hará un continue y reiniciará
+                         *  el ciclo sin avanzar al otro pageCounter.**/
+                        pageCounter++;
+                        if(uri.AbsoluteUri.Contains("&searchRedirect="))
+                            /* Hay que tomar el nuevo URL pero sin el "&searchRedirect=".**/
+                            baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("&searchRedirect="));
+                        else
+                            /* Hay URL que no tienen el ampersand "&" antes del parámetro searchRedirect.**/
+                            if(uri.AbsoluteUri.Contains("searchRedirect="))
+                                baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("searchRedirect="));
+                        /* Si el enlace ya tiene algunos de los elementos de la consulta,
+                         *  ya no agregarlos.**/
+                        if (uri.AbsoluteUri.Contains("query="))
+                            addQuery = false;
+                        if (uri.AbsoluteUri.Contains("&sort="))
+                            addSortBy = false;
+                        if (uri.AbsoluteUri.Contains("&page="))
+                            addPageNumber = false;
+                        /* Continue para ya no seguir con los siguientes procesos.**/
+                        continue;
+                    }
+                        
+                    /* Reiniciar contador para buscar en las páginas hacia donde nos redirigieron.**/
+                    pageCounter = 1;
+                    /* Hay que guardar esta URL por si nos vuelve a redirigir, ya no repetir proceso.**/
+                    onceRedirectedURL = uri.AbsoluteUri;
+                    //currentPageURL = uri.AbsoluteUri + "&page=" + pageCounter;
+                    /* Hacemos la base el nuevo enlace al que se redirigió. Esto 
+                     * encontrando el último índice de la subcadena que lo indica.**/
+                    baseURL = uri.AbsoluteUri.Substring(0, uri.AbsoluteUri.IndexOf("&searchRedirect=") + "&searchRedirect=".Length);
+                    /* Indicar que ya se encontró el texto.**/
+                    searchRedirectFound = true;
+                    continue;
+                }
+
+                /* Si la URL anterior es igual a la actual, romper ciclo.
+                 * De otra forma se estará accediendo a la misma una y otra vez
+                 *  porque hay búsquedas que redirigen a otras URLs que no son
+                 *  las que nosotros buscamos.**/
+                if (lastURL.Equals(uri.AbsoluteUri) || uri.AbsoluteUri.Equals(onceRedirectedURL))
+                    break;
+                else /* Si la URL anterior no es igual a la actual, guardar esta como
+                      * la nueva anterior.**/
+                    lastURL = uri.AbsoluteUri;
+
+                /* Mensajes en consola para comprobar que la URL se esté manejando
+                 *  correctamente.**/
+                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.AbsoluteUri);
+                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.PathAndQuery);
+                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.AbsolutePath);
+                Console.WriteLine("\n - URI DE RESPUESTA: " + uri.ToString());
+                /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
+
+                
 
                 // Display the content.
-                //Console.WriteLine(responseFromServer);
+                //Console.WriteLine(webpageSourceCode);
 
                 
                 Console.WriteLine(" -> Response\n");
+                /* Buscar el índice inicial en donde comienza toda la información.
+                 * La información comienza con la cadena de texto: "window.INITIAL_PAGE_STATE".**/
+                currentIndex = webpageSourceCode.IndexOf("window.INITIAL_PAGE_STATE") + "window.INITIAL_PAGE_STATE".Length;
+                /* Buscar el índice de la cadena que nos deja el número de 
+                 *  productos mostrados en la página.
+                 *  El índice se busca desde donde encontramos que inicia la información.
+                 *      \"totalCount\":númeroDeElementosEnPágina
+                 *  **/
+                /* Subcadena que irá del índice actual al último índice de la cadena
+                 *  que contiene todo el código fuente del sitio web.
+                 * Irá cambiando cada que cambie el índice.**/
+                string substrCurrIndex = webpageSourceCode.Substring(currentIndex, webpageSourceCode.Length - currentIndex);
+                currentIndex = substrCurrIndex.IndexOf("\"totalCount\":") + "\"totalCount\":".Length;
+                productsInPage = webpageSourceCode.Substring(currentIndex, 1);
+                currentIndex++;
+                /* Revisamos si el siguiente caracter también es un número.
+                 * Si sí es un número, concatenarlo a la cadena del número
+                 *  de elementos en la página. Luego se hará un cast a entero
+                 *  para buscar todos los productos.
+                 * 
+                 * - FUENTE: [StackOverflow] Identify if a string is a number 
+                 *    https://stackoverflow.com/questions/894263/identify-if-a-string-is-a-number#:~:text=If%20you%20want%20to%20know%20if%20a%20string%20is%20a,check%20if%20your%20parsing%20succeeded.
+                 * **/
+                if (int.TryParse(webpageSourceCode.Substring(currentIndex, 1), out _))
+                    productsInPage += webpageSourceCode.Substring(currentIndex, 1);
+                /* Ahora hacemos un ciclo para crear cada objeto con su nombre
+                 *  y URL.**/
+                for(int i = 0; i < int.Parse(productsInPage); i++)
+                {
+                    substrCurrIndex = webpageSourceCode.Substring(currentIndex, webpageSourceCode.Length - currentIndex);
+                    /* NOMBRE DEL PRODUCTO: \"title\":\"
+                     * - Este se busca de la siguiente manera:
+                     *      @"\""title\"":\"""
+                     * -> Se pone el @ para no utilizar secuencias de escape,
+                     * pero para las comillas no funciona, por lo que se tienen
+                     * que poner unas comillas más para que cuenten. Por ejemplo,
+                     * si queremos poner [ " hola " ] (sin contar los corchetes),
+                     * tendremos que poner [ "" hola ""].
+                     * 
+                     * FUENTE: [StackOverflow] How to use “\” in a string without making it an escape sequence - C#?
+                     *  https://stackoverflow.com/questions/1768023/how-to-use-in-a-string-without-making-it-an-escape-sequence-c
+                     * **/
+                    currentIndex = substrCurrIndex.IndexOf(@"\""title\"":\""");
+
+                    /* Si llegó hasta aquí significa que no ha pasado la última
+                     *  página y podemos instanciar un elemento de producto.**/
+                    //productList.Add(new Product(, uri.AbsoluteUri));
+                }
+                //productName = webpageSourceCode.Substring();
 
                 pageCounter++;
                 /* Esta cadena en el código fuente de la página indica
@@ -232,12 +299,19 @@ namespace _T3._1__WebRequest_con_BestBuy
                  * Así podemos darnos cuenta de que ya no hay más resultados.
                  * Aún así, esto lo podemos poner en un if para que no
                  *  haga procedimientos innecesarios y salga con un break.**/
-            } while (!responseFromServer.Contains("<p class=\"plp-no-results\">"));
-            //&& responseFromServer.Contains("<li class=\"category-facet-item \">"));
+            }
+            //&& webpageSourceCode.Contains("<li class=\"category-facet-item \">"));
             // Cleanup the streams and the response.
             reader.Close();
             dataStream.Close();
             response.Close();
+        }
+        /* Método que verifica si el sitio web actual es el último.
+         * Si encuentra lo que está en el return significa que ya se
+         *  encuentra actualmente en la última página.**/
+        private static bool IsLastWebPage(string webpageSourceCode)
+        {
+            return webpageSourceCode.Contains("<p class=\"plp-no-results\">");
         }
         /* Método que mostrará los nombres de los productos encontrados
          *  en una lista de productos. El que se seleccione mostrará sus
