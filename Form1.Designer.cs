@@ -121,6 +121,7 @@
             this.comboBox_SortBy.Size = new System.Drawing.Size(250, 24);
             this.comboBox_SortBy.TabIndex = 1;
             this.comboBox_SortBy.Tag = "Query";
+            this.comboBox_SortBy.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBox_SortBy_KeyDown);
             // 
             // button_WebSearch
             // 

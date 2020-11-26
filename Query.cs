@@ -2,8 +2,6 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.IO;
 
@@ -39,8 +37,11 @@ namespace _T3._1__WebRequest_con_BestBuy
          * No quiero ser ambiguo, por lo que recibiré los
          *  parámetros directamente del tipo de dato, y
          *  crearé variables de cadenas ya específicas. De 
-         *  esta manera se da a entender mejor el proceso. **/
-        public static void SearchQuery(TextBox _query, string sortBy)
+         *  esta manera se da a entender mejor el proceso. 
+         * Recibimos un arreglo de objetos para tener el
+         *  combobox y el ErrorProvider para mostrar un avis
+         *  cuando se haya redirigido la búsqueda.**/
+        public static void SearchQuery(TextBox _query, string sortBy, Object[] errorAndCombobox)
         {
             string query = _query.Text;
             /* Cadena que guardará la forma de ordenamiento de la búsqueda.
@@ -98,8 +99,6 @@ namespace _T3._1__WebRequest_con_BestBuy
              *  del ciclo con un break.**/
             while(true)
             {
-                /* Inicializar el índice.**/
-                currentIndex = 0;
                 /* Si atrapa una excepción significa que no encontró
                  *  más páginas y podemos terminar el proceso.
                  * Solo terminará el ciclo cuando se entre al catch.
@@ -181,6 +180,17 @@ namespace _T3._1__WebRequest_con_BestBuy
                  *  ver si hay más, si no, nos seguirá redirigiendo a la misma.**/
                 if (uri.AbsoluteUri.Contains("searchRedirect") && !searchRedirectFound)
                 {
+                    /* Si redirigió a otra página, mostrar un cuadro de error (aunque
+                     *  no es un error sino un aviso) informando que dado a que
+                     *  se redirigió la búsqueda, los filtros de búsqueda no se han
+                     *  podido aplicar.**/
+                    ErrorProvider error = (ErrorProvider)errorAndCombobox[0];
+                    ComboBox comboBox_sortBy = (ComboBox)errorAndCombobox[1];
+                    error.SetError(comboBox_sortBy, "AVISO: El sitio web de Best Buy ha"
+                                                + "\n redirigido la página a un URL distinto."
+                                                + "\nA causa de esto, el filtro de ordenación"
+                                                + "\n NO se ha aplicado a la búsqueda.");
+
                     /* Hay ocasiones en que el "searchRedirect" está al final de
                      *  la URL y no al inicio. En esos casos no podemos concatenarle
                      *  la consulta porque crecerá exponencialmente. Ahí simplemente
@@ -441,6 +451,41 @@ namespace _T3._1__WebRequest_con_BestBuy
              * en el Form1.cs.**/
             
             return false; /* No se pudo hacer la búsqueda.**/
+        }
+        /* Método para decidir cuál será el método de ordenación
+         *  que se enviará como parámetro en la petición del enlace. **/
+        public static string GetSortedByQuery(ComboBox sortByList)
+        {
+            string sortBy = "";
+
+            /* LISTA DE ELEMENTOS DE LA LISTA
+             *  CON SU EQUIVALENCIA EN LA QUERY
+             *  DE LA PÁGINA WEB DE Best Buy:
+             * - Mejor Coincidencia [Best-Match]
+               - Precio de Bajo a Alto [Price-Low-To-High]
+               - Precio de Alto a Bajo [Price-High-To-Low]
+               - Marcas A-Z [Brand-A-Z]
+               - Marcas Z-A [Brand-Z-A]
+               - Fecha de lanzamiento [Release-Date]
+               - Recién Llegados [New-Arrivals]
+               - Título A-Z [Title-A-Z]
+               - Título Z-A [Title-Z-A]
+            **/
+
+            switch (sortByList.SelectedItem)
+            {
+                case "Mejor Coincidencia": sortBy = "Best-Match"; break;
+                case "Precio de Bajo a Alto": sortBy = "Price-Low-To-High"; break;
+                case "Precio de Alto a Bajo": sortBy = "Price-High-To-Low"; break;
+                case "Marcas A-Z": sortBy = "Brand-A-Z"; break;
+                case "Marcas Z-A": sortBy = "Brand-Z-A"; break;
+                case "Fecha de lanzamiento": sortBy = "Release-Date"; break;
+                case "Recién Llegados": sortBy = "New-Arrivals"; break;
+                case "Título A-Z": sortBy = "Title-A-Z"; break;
+                case "Título Z-A": sortBy = "Title-Z-A"; break;
+            }
+
+            return sortBy;
         }
         static private void ShowUriInfo(Uri uri)
         {

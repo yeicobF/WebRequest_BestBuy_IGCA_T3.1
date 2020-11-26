@@ -48,7 +48,12 @@ namespace _T3._1__WebRequest_con_BestBuy
                 searchErrorProvider.SetError(button_WebSearch, String.Empty);
                 /* Realizar la búsqueda tomando el elemento a buscar y la
                  *  categoría.**/
-                Query.SearchQuery(textBox_WebQuery, GetSortedByQuery(comboBox_SortBy));
+                /* Arreglo tipo Object en donde mandaremos el ErrorProvider
+                 *  y el ComboBox para cuando se redirija la consulta a un
+                 *  URL distinto al que nosotros especificamos y no se aplique
+                 *  el filtro de ordenación.**/
+                Object[] errorAndCombobox = new object[2] { searchErrorProvider, comboBox_SortBy };
+                Query.SearchQuery(textBox_WebQuery, Query.GetSortedByQuery(comboBox_SortBy), errorAndCombobox);
 
                 /* Método que después de hacer la búsqueda mostrará la lista
                  *  de productos que encontró y que se pueden seleccionar.**/
@@ -78,40 +83,17 @@ namespace _T3._1__WebRequest_con_BestBuy
             if (e.KeyCode == Keys.Enter)
                 button_WebSearch_Click(sender, e);
         }
-        /* Método para decidir cuál será el método de ordenación
-         *  que se enviará como parámetro en la petición del enlace. **/
-        private string GetSortedByQuery(ComboBox sortByList)
+        /* Método que activará la búsqueda actual al presionar la tecla "enter"
+             *  cuando se esté en la lista de categorías.
+             * 
+             * - Debe haber un texto en la búsqueda y un 
+             * método de ordenamiento seleccionado.**/
+        private void comboBox_SortBy_KeyDown(object sender, KeyEventArgs e)
         {
-            string sortBy = "";
-
-            /* LISTA DE ELEMENTOS DE LA LISTA
-             *  CON SU EQUIVALENCIA EN LA QUERY
-             *  DE LA PÁGINA WEB DE Best Buy:
-             * - Mejor Coincidencia [Best-Match]
-               - Precio de Bajo a Alto [Price-Low-To-High]
-               - Precio de Alto a Bajo [Price-High-To-Low]
-               - Marcas A-Z [Brand-A-Z]
-               - Marcas Z-A [Brand-Z-A]
-               - Fecha de lanzamiento [Release-Date]
-               - Recién Llegados [New-Arrivals]
-               - Título A-Z [Title-A-Z]
-               - Título Z-A [Title-Z-A]
-            **/
-
-            switch (sortByList.SelectedItem)
-            {
-                case "Mejor Coincidencia": sortBy = "Best-Match"; break;
-                case "Precio de Bajo a Alto": sortBy = "Price-Low-To-High"; break;
-                case "Precio de Alto a Bajo": sortBy = "Price-High-To-Low"; break;
-                case "Marcas A-Z": sortBy = "Brand-A-Z"; break;
-                case "Marcas Z-A": sortBy = "Brand-Z-A"; break;
-                case "Fecha de lanzamiento": sortBy = "Release-Date"; break;
-                case "Recién Llegados": sortBy = "New-Arrivals"; break;
-                case "Título A-Z": sortBy = "Title-A-Z"; break;
-                case "Título Z-A": sortBy = "Title-Z-A"; break;
-            }
-
-            return sortBy;
+            /* Si se presionó enter, realizar la búsqueda llamando al método
+             *  del botón.**/
+            if (e.KeyCode == Keys.Enter)
+                button_WebSearch_Click(sender, e);
         }
     }
 }
