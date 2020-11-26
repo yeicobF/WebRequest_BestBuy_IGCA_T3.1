@@ -34,8 +34,10 @@
             this.label_WebQueryCategory = new System.Windows.Forms.Label();
             this.comboBox_SortBy = new System.Windows.Forms.ComboBox();
             this.button_WebSearch = new System.Windows.Forms.Button();
-            this.listBox_Elements = new System.Windows.Forms.ListBox();
-            this.listBox_ElementInformation = new System.Windows.Forms.ListBox();
+            this.listBox_Products = new System.Windows.Forms.ListBox();
+            this.label_ProductInformation = new System.Windows.Forms.Label();
+            this.label_Products = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox_WebQuery
@@ -133,29 +135,58 @@
             this.button_WebSearch.Text = "Buscar";
             this.button_WebSearch.UseVisualStyleBackColor = false;
             // 
-            // listBox_Elements
+            // listBox_Products
             // 
-            this.listBox_Elements.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBox_Elements.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.listBox_Elements.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBox_Elements.ItemHeight = 16;
-            this.listBox_Elements.Location = new System.Drawing.Point(13, 78);
-            this.listBox_Elements.Name = "listBox_Elements";
-            this.listBox_Elements.Size = new System.Drawing.Size(389, 370);
-            this.listBox_Elements.TabIndex = 3;
-            this.listBox_Elements.Tag = "Information";
+            this.listBox_Products.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listBox_Products.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.listBox_Products.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox_Products.ItemHeight = 16;
+            this.listBox_Products.Location = new System.Drawing.Point(13, 110);
+            this.listBox_Products.Name = "listBox_Products";
+            this.listBox_Products.Size = new System.Drawing.Size(389, 338);
+            this.listBox_Products.TabIndex = 3;
+            this.listBox_Products.Tag = "Information";
             // 
-            // listBox_ElementInformation
+            // label_ProductInformation
             // 
-            this.listBox_ElementInformation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listBox_ElementInformation.Cursor = System.Windows.Forms.Cursors.Default;
-            this.listBox_ElementInformation.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBox_ElementInformation.ItemHeight = 16;
-            this.listBox_ElementInformation.Location = new System.Drawing.Point(456, 78);
-            this.listBox_ElementInformation.Name = "listBox_ElementInformation";
-            this.listBox_ElementInformation.Size = new System.Drawing.Size(330, 466);
-            this.listBox_ElementInformation.TabIndex = 4;
-            this.listBox_ElementInformation.Tag = "Information";
+            this.label_ProductInformation.AutoEllipsis = true;
+            this.label_ProductInformation.BackColor = System.Drawing.SystemColors.Window;
+            this.label_ProductInformation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_ProductInformation.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.label_ProductInformation.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ProductInformation.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label_ProductInformation.Location = new System.Drawing.Point(456, 94);
+            this.label_ProductInformation.Name = "label_ProductInformation";
+            this.label_ProductInformation.Size = new System.Drawing.Size(330, 458);
+            this.label_ProductInformation.TabIndex = 4;
+            this.label_ProductInformation.Tag = "Information";
+            this.label_ProductInformation.Text = "Información del producto.";
+            // 
+            // label_Products
+            // 
+            this.label_Products.BackColor = System.Drawing.Color.DarkRed;
+            this.label_Products.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_Products.Font = new System.Drawing.Font("Malgun Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_Products.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label_Products.Location = new System.Drawing.Point(12, 62);
+            this.label_Products.Name = "label_Products";
+            this.label_Products.Size = new System.Drawing.Size(390, 46);
+            this.label_Products.TabIndex = 103;
+            this.label_Products.Text = "LISTA DE PRODUCTOS";
+            this.label_Products.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.Color.DarkRed;
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Font = new System.Drawing.Font("Malgun Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label1.Location = new System.Drawing.Point(456, 62);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(330, 21);
+            this.label1.TabIndex = 104;
+            this.label1.Text = "INFORMACIÓN DEL PRODUCTO";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SearchWindow
             // 
@@ -163,8 +194,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(804, 561);
-            this.Controls.Add(this.listBox_ElementInformation);
-            this.Controls.Add(this.listBox_Elements);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.label_Products);
+            this.Controls.Add(this.label_ProductInformation);
+            this.Controls.Add(this.listBox_Products);
             this.Controls.Add(this.button_WebSearch);
             this.Controls.Add(this.comboBox_SortBy);
             this.Controls.Add(this.label_WebQueryCategory);
@@ -191,8 +224,10 @@
         private System.Windows.Forms.Label label_WebQueryCategory;
         private System.Windows.Forms.ComboBox comboBox_SortBy;
         private System.Windows.Forms.Button button_WebSearch;
-        private System.Windows.Forms.ListBox listBox_Elements;
-        private System.Windows.Forms.ListBox listBox_ElementInformation;
+        private System.Windows.Forms.ListBox listBox_Products;
+        private System.Windows.Forms.Label label_Products;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_ProductInformation;
     }
 }
 
