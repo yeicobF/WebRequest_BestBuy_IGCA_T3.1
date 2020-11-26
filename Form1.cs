@@ -71,7 +71,6 @@ namespace _T3._1__WebRequest_con_BestBuy
          * 
          * - Debe haber un texto en la búsqueda y un 
          * método de ordenamiento seleccionado.**/
-
         private void textBox_WebQuery_KeyDown(object sender, KeyEventArgs e)
         {
             /* Si se presionó enter, realizar la búsqueda llamando al método

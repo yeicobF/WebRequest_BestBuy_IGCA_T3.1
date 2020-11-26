@@ -55,8 +55,18 @@ namespace _T3._1__WebRequest_con_BestBuy
             string currentPageURL, productURL = "", productName = "";
             /* baseURL: URL base para TODAS las búsquedas de Best Buy. **/
             string baseURL = "https://www.bestbuy.com.mx/c/buscar-best-buy/buscar?query=";
-            string responseFromServer;
+            /* lastURL: El anterior URL para verificar que no se haga
+             *  la solicitud al sitio más de una vez.
+             * onceRedirectedURL: Para verificar que no nos vuelva a
+             *  redirigir a un sitio en donde ya estuvimos.**/
+            string responseFromServer = "", lastURL = "", onceRedirectedURL = "";
+            /* bool para indicar que ya se encontró un searchRedirect.**/
+            bool searchRedirectFound = false;
+            /* bool para ver qué valores se agregarán al URL.**/
+            bool addQuery = true, addSortBy = true, addPageNumber = true;
             HttpWebResponse response;
+            Stream dataStream = null;
+            StreamReader reader = null;
 
             /* Hay que limpiar la lista porque es estático por si
              *  tiene elementos.**/
@@ -88,8 +98,35 @@ namespace _T3._1__WebRequest_con_BestBuy
                  *  que solo se puede hacer concatenando, entonces
                  *  antes de hacerlo cada vez tengo que reiniciar la cadena.**/
                 currentPageURL = "";
+                currentPageURL = baseURL;
+                /* Agregar de uno por uno si lo indicamos.
+                 * Esto por si hay un URL que tengo que tomar
+                 *  como el URI base y ya tiene estos elementos.
+                 * Si los agrego el URL se empieza a agrandar mal.**/
+                if (addQuery)
+                    currentPageURL += query;
+                if(addSortBy)
+                    currentPageURL += "&sort=Best-Match";
+                if(addPageNumber)
+                    currentPageURL += "&page=" + pageCounter;
+                else /* Si no, solo agregamos el número.**/
+                {
+                    /* Aquí tomo el índice en donde encuentro lo del número
+                     *  de página, para quitar el número actual y poner el nuevo.**/
+                    int pageNumberIndex = currentPageURL.IndexOf("&page=") + "&page=".Length;
+                    //int pageNumberIndex = 25;
+                    /* Aquí cambio SOLO el número de página y lo demás lo dejo tal y como está.
+                     * Esto lo hago así porque el número de página es el que siempre cambiará
+                     *  a pesar de las condiciones. Lo que sigue del número de página queda
+                     *  tal y como está.**/
+                    currentPageURL = currentPageURL.Substring(0, pageNumberIndex) + pageCounter 
+                        + currentPageURL.Substring(pageNumberIndex + 1, currentPageURL.Length - pageNumberIndex - 1);
+                }
                 //currentPageURL += ("{url/query=}{query}&sort={sortBy}&page={pageNumber}", baseURL, query, sortBy, pageCounter);
-                currentPageURL = baseURL + query + "&sort=" + "Price-Low-To-High" + "&page=" + pageCounter;
+                // + "&sort=" + "Price-Low-To-High" + "&page=" + pageCounter;
+
+                
+
                 //currentPageURL = "https://www.bestbuy.com.mx/c/buscar-best-buy/buscar?query=ps5&sort=Best-Match" + "&page=" + pageCounter;
                 Console.WriteLine("\n - URL ACTUAL: " + currentPageURL + "\n -> Request\n");
 
@@ -101,7 +138,69 @@ namespace _T3._1__WebRequest_con_BestBuy
 
                 // Get the response.
                 response = (HttpWebResponse)request.GetResponse();
+                Uri s = response.ResponseUri;
 
+                /* Si nos redirige, irnos moviéndonos de página para
+                 *  ver si hay más, si no, nos seguirá redirigiendo a la misma.**/
+                if (s.AbsoluteUri.Contains("searchRedirect") && !searchRedirectFound)
+                {
+                    /* Hay ocasiones en que el "searchRedirect" está al final de
+                     *  la URL y no al inicio. En esos casos no podemos concatenarle
+                     *  la consulta porque crecerá exponencialmente. Ahí simplemente
+                     *  lo ignoramos y continuamos con el conteo normal de páginas.
+                     *  Ese al menos fue el comportamiento que vi con la búsqueda
+                     *      de "Bose".
+                     *  Si el último índice de esa cadena es igual al tamaño
+                     *      de la cadena del URL, ignorar y continuar con la búsqueda
+                     *      en la siguiente página.**/
+                    if(s.AbsoluteUri.IndexOf("searchRedirect=" + query) + ("searchRedirect=" + query).Length == s.AbsoluteUri.Length)
+                    {
+                        /* Aumentar el contador de página. Esto porque hará un continue y reiniciará
+                         *  el ciclo sin avanzar al otro pageCounter.**/
+                        pageCounter++;
+                        /* Hay que tomar el nuevo URL pero sin el "&searchRedirect=".**/
+                        baseURL = s.AbsoluteUri.Substring(0, s.AbsoluteUri.IndexOf("&searchRedirect="));
+                        /* Si el enlace ya tiene algunos de los elementos de la consulta,
+                         *  ya no agregarlos.**/
+                        if (s.AbsoluteUri.Contains("query="))
+                            addQuery = false;
+                        if (s.AbsoluteUri.Contains("&sort="))
+                            addSortBy = false;
+                        if (s.AbsoluteUri.Contains("&page="))
+                            addPageNumber = false;
+                        /* Continue para ya no seguir con los siguientes procesos.**/
+                        continue;
+                    }
+                        
+                    /* Reiniciar contador para buscar en las páginas hacia donde nos redirigieron.**/
+                    pageCounter = 1;
+                    /* Hay que guardar esta URL por si nos vuelve a redirigir, ya no repetir proceso.**/
+                    onceRedirectedURL = s.AbsoluteUri;
+                    //currentPageURL = s.AbsoluteUri + "&page=" + pageCounter;
+                    /* Hacemos la base el nuevo enlace al que se redirigió. Esto 
+                     * encontrando el último índice de la subcadena que lo indica.**/
+                    baseURL = s.AbsoluteUri.Substring(0, s.AbsoluteUri.IndexOf("&searchRedirect=") + "&searchRedirect=".Length);
+                    /* Indicar que ya se encontró el texto.**/
+                    searchRedirectFound = true;
+                    continue;
+                }
+
+                /* Si la URL anterior es igual a la actual, romper ciclo.
+                 * De otra forma se estará accediendo a la misma una y otra vez
+                 *  porque hay búsquedas que redirigen a otras URLs que no son
+                 *  las que nosotros buscamos.**/
+                if (lastURL.Equals(s.AbsoluteUri) || s.AbsoluteUri.Equals(onceRedirectedURL))
+                    break;
+                else /* Si la URL anterior no es igual a la actual, guardar esta como
+                      * la nueva anterior.**/
+                    lastURL = s.AbsoluteUri;
+
+                /* Mensajes en consola para comprobar que la URL se esté manejando
+                 *  correctamente.**/
+                Console.WriteLine("\n - URI DE RESPUESTA: " + s.AbsoluteUri);
+                Console.WriteLine("\n - URI DE RESPUESTA: " + s.PathAndQuery);
+                Console.WriteLine("\n - URI DE RESPUESTA: " + s.AbsolutePath);
+                Console.WriteLine("\n - URI DE RESPUESTA: " + s.ToString());
                 /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
 
                 // Display the status.
@@ -110,11 +209,11 @@ namespace _T3._1__WebRequest_con_BestBuy
 
                 // Get the stream containing content returned by the server.
                 // Aquí se guarda un archivo en memoria con la información obtenida en el response.
-                Stream dataStream = response.GetResponseStream();
+                dataStream = response.GetResponseStream();
 
                 // Open the stream using a StreamReader for easy access.
                 // Con este lector podemos iterar en el archivo.
-                StreamReader reader = new StreamReader(dataStream);
+                reader = new StreamReader(dataStream);
 
                 // Read the content.
                 // Guardamos el texto del archivo guardado en memoria para luego mostrarlo.
@@ -123,18 +222,22 @@ namespace _T3._1__WebRequest_con_BestBuy
                 // Display the content.
                 //Console.WriteLine(responseFromServer);
 
-                // Cleanup the streams and the response.
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                
                 Console.WriteLine(" -> Response\n");
 
                 pageCounter++;
                 /* Esta cadena en el código fuente de la página indica
                  *  que ya no hay resultados de la búsqueda:
                  *      <p class=\"plp-no-results\">
-                 * **/
+                 * Así podemos darnos cuenta de que ya no hay más resultados.
+                 * Aún así, esto lo podemos poner en un if para que no
+                 *  haga procedimientos innecesarios y salga con un break.**/
             } while (!responseFromServer.Contains("<p class=\"plp-no-results\">"));
+            //&& responseFromServer.Contains("<li class=\"category-facet-item \">"));
+            // Cleanup the streams and the response.
+            reader.Close();
+            dataStream.Close();
+            response.Close();
         }
         /* Método que mostrará los nombres de los productos encontrados
          *  en una lista de productos. El que se seleccione mostrará sus
