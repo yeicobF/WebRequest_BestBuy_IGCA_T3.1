@@ -41,9 +41,7 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  método de ordenamiento seleccionado. **/
         private void button_WebSearch_Click(object sender, EventArgs e)
         {
-            /* Si hay texto en el cuadro de búsqueda (textBox) y hay un método
-             *  de ordenamiento seleccionado, se puede realizar la búsqueda. **/
-            if (Query.IsSearchable(textBox_WebQuery.Text, comboBox_SortBy.SelectedItem.ToString()))
+            if (Query.IsSearchable(textBox_WebQuery, comboBox_SortBy))
                 Query.SearchQuery(textBox_WebQuery, comboBox_SortBy);
         }
         /* Método que activará la búsqueda actual al presionar la tecla "enter"
