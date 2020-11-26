@@ -31,7 +31,33 @@ namespace _T3._1__WebRequest_con_BestBuy
         {
             InitializeComponent();
 
-            Product.EscribeLabelTextPrueba(ref label_ProductInformation.Text);
+            //Product.EscribeLabelTextPrueba(label_ProductInformation);
+        }
+        /* Método que efectuará la búsqueda cuando se dé click (con el
+         *  mouse o presionando la tecla "enter" sobre el espacio)
+         *  a la barra de búsqueda o al botón de búsqueda.
+         * 
+         * - Debe haber un texto en la búsqueda y un 
+         *  método de ordenamiento seleccionado. **/
+        private void button_WebSearch_Click(object sender, EventArgs e)
+        {
+            /* Si hay texto en el cuadro de búsqueda (textBox) y hay un método
+             *  de ordenamiento seleccionado, se puede realizar la búsqueda. **/
+            if (Query.IsSearchable(textBox_WebQuery.Text, comboBox_SortBy.SelectedItem.ToString()))
+                Query.SearchQuery(textBox_WebQuery, comboBox_SortBy);
+        }
+        /* Método que activará la búsqueda actual al presionar la tecla "enter"
+         *  cuando se esté en la barra de búsqueda.
+         * 
+         * - Debe haber un texto en la búsqueda y un 
+         * método de ordenamiento seleccionado.**/
+
+        private void textBox_WebQuery_KeyDown(object sender, KeyEventArgs e)
+        {
+            /* Si se presionó enter, realizar la búsqueda llamando al método
+             *  del botón.**/
+            if (e.KeyCode == Keys.Enter)
+                button_WebSearch_Click(sender, e);
         }
     }
 }

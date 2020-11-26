@@ -40,7 +40,8 @@ namespace _T3._1__WebRequest_con_BestBuy
              *  cadena está vacía no mostrar la info. **/
             model = publisher = sku = price = rating = releaseDate = description = "";
         }
-
+        /* Método para probar si las Label se modifican en pantalla
+         *  aunque no se pasen por referencia. **/
         public static void EscribeLabelTextPrueba(Label label)
         {
             label.Text += "HOLA";
@@ -89,11 +90,6 @@ namespace _T3._1__WebRequest_con_BestBuy
             label.Text += "\n\n - CARACTERÍSTICAS: ";
             /* Agregamos las características a la cadena. **/
             label.Text += GetBulletsOfList(characteristics);
-
-            //for(int i = 0; i < characteristics.Count; i++)
-            //    /* Aquí concatenamos cada característica en una línea nueva
-            //     *  indicando el número de característica. **/
-            //    label.Text += ("\n  {0}.- {1}", i, characteristics.ElementAt(i));
         }
         /* Método para concatenar las reviews del producto
          *  a la cadena del cuadro de texto. Esto además de para

@@ -49,6 +49,7 @@
             this.textBox_WebQuery.Size = new System.Drawing.Size(250, 23);
             this.textBox_WebQuery.TabIndex = 0;
             this.textBox_WebQuery.Tag = "Query";
+            this.textBox_WebQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_WebQuery_KeyDown);
             // 
             // label_InformationOfProject
             // 
@@ -134,6 +135,7 @@
             this.button_WebSearch.Tag = "Query";
             this.button_WebSearch.Text = "Buscar";
             this.button_WebSearch.UseVisualStyleBackColor = false;
+            this.button_WebSearch.Click += new System.EventHandler(this.button_WebSearch_Click);
             // 
             // listBox_Products
             // 
