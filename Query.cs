@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.IO;
 
 /* CLASE PARA HACER LA BÚSQUEDA DE ACUERDO A LA QUERY ESPECÍFICADA:
  *  - Elemento/Producto a buscar
@@ -45,20 +47,94 @@ namespace _T3._1__WebRequest_con_BestBuy
              * Así es como se accede a un elemento de la ComboBox y se pasa
              *  a cadena. **/
             string sortBy = _sortBy.SelectedItem.ToString();
+            /* currentURL: Será el URL para buscar TODOS los elementos
+             *  de la página actual. Se iterará hasta que ya no existan
+             *  más páginas.
+             * productURL: La URL de cada producto.
+             * productName: El nombre de cada producto.**/
+            string currentPageURL, productURL = "", productName = "";
+            /* baseURL: URL base para TODAS las búsquedas de Best Buy. **/
+            string baseURL = "https://www.bestbuy.com.mx/c/buscar-best-buy/buscar?query=";
+            string responseFromServer;
+            HttpWebResponse response;
+
             /* Hay que limpiar la lista porque es estático por si
              *  tiene elementos.**/
-             if(productList.Count > 0)
+            if (productList.Count > 0)
                 productList.Clear();
-             /* Para hacer la búsqueda hay que hacer un String.Trim()
-              *     para que busque sin los espacios al inicio o
-              *     al final por si se ingresó así la búsqueda.
-              * Aunque esto es opcional realmente porque de cualquier
-              *     forma el sitio web decide si se puede hacer la
-              *     búsqueda o no, y nosotros solo la mandamos
-              *     tal como el usuario la hizo.**/
+            /* Para hacer la búsqueda hay que hacer un String.Trim()
+             *     para que busque sin los espacios al inicio o
+             *     al final por si se ingresó así la búsqueda.
+             * Aunque esto es opcional realmente porque de cualquier
+             *     forma el sitio web decide si se puede hacer la
+             *     búsqueda o no, y nosotros solo la mandamos
+             *     tal como el usuario la hizo.**/
 
+            /* Iterador para las páginas de los sitios web.
+             * Los números de página comienzan desde el 1.**/
+            int pageCounter = 1;
+            /* Necesito que haga el procedimiento antes que la verificación
+             *  de la condición. Es decir, que primero haga la solicitud y
+             *  luego verifique. Podría poner un bloque "Try-Catch" para
+             *  cuando no encuentre más páginas en la búsqueda y salta una
+             *  excepción, así terminar el proceso.**/
+            do
+            {
+                /* Si atrapa una excepción significa que no encontró
+                 *  más páginas y podemos terminar el proceso.
+                 * Solo terminará el ciclo cuando se entre al catch.
+                 * Utilizo esta forma para guardar el URL para que sea
+                 *  más fácil identificar el patrón. La cuestión es
+                 *  que solo se puede hacer concatenando, entonces
+                 *  antes de hacerlo cada vez tengo que reiniciar la cadena.**/
+                currentPageURL = "";
+                //currentPageURL += ("{url/query=}{query}&sort={sortBy}&page={pageNumber}", baseURL, query, sortBy, pageCounter);
+                currentPageURL = baseURL + query + "&sort=" + "Price-Low-To-High" + "&page=" + pageCounter;
+                //currentPageURL = "https://www.bestbuy.com.mx/c/buscar-best-buy/buscar?query=ps5&sort=Best-Match" + "&page=" + pageCounter;
+                Console.WriteLine("\n - URL ACTUAL: " + currentPageURL + "\n -> Request\n");
 
+                // Create a request for the URL. 		
+                //WebRequest request = WebRequest.Create("AQUÍ VA LA URL");
+                WebRequest request = WebRequest.Create(currentPageURL);
+                // If required by the server, set the credentials.
+                request.Credentials = CredentialCache.DefaultCredentials;
 
+                // Get the response.
+                response = (HttpWebResponse)request.GetResponse();
+
+                /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
+
+                // Display the status.
+                // Aquí escribimos el estado en la consola.
+                Console.WriteLine(response.StatusDescription);
+
+                // Get the stream containing content returned by the server.
+                // Aquí se guarda un archivo en memoria con la información obtenida en el response.
+                Stream dataStream = response.GetResponseStream();
+
+                // Open the stream using a StreamReader for easy access.
+                // Con este lector podemos iterar en el archivo.
+                StreamReader reader = new StreamReader(dataStream);
+
+                // Read the content.
+                // Guardamos el texto del archivo guardado en memoria para luego mostrarlo.
+                responseFromServer = reader.ReadToEnd();
+
+                // Display the content.
+                //Console.WriteLine(responseFromServer);
+
+                // Cleanup the streams and the response.
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+                Console.WriteLine(" -> Response\n");
+
+                pageCounter++;
+                /* Esta cadena en el código fuente de la página indica
+                 *  que ya no hay resultados de la búsqueda:
+                 *      <p class=\"plp-no-results\">
+                 * **/
+            } while (!responseFromServer.Contains("<p class=\"plp-no-results\">"));
         }
         /* Método que mostrará los nombres de los productos encontrados
          *  en una lista de productos. El que se seleccione mostrará sus
