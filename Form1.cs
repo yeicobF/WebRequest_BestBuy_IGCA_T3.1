@@ -41,8 +41,26 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  método de ordenamiento seleccionado. **/
         private void button_WebSearch_Click(object sender, EventArgs e)
         {
+            /* Si se puede hacer la búsqueda, realizarla.**/
             if (Query.IsSearchable(textBox_WebQuery, comboBox_SortBy))
+            {
+                /* Borrar el error de "searchErrorProvider" si es que había alguno. **/
+                searchErrorProvider.SetError(button_WebSearch, String.Empty);
                 Query.SearchQuery(textBox_WebQuery, comboBox_SortBy);
+
+                /* Método que después de hacer la búsqueda mostrará la lista
+                 *  de productos que encontró y que se pueden seleccionar.**/
+                Query.ShowQueryResults();
+
+                /* Cuando ya se muestre la lista de productos para seleccionar,
+                *  agregar un texto que indique que seleccione un producto.**/
+                label_Products.Text += "\n - SELECCIONE UN PRODUCTO PARA VER DETALLES -";
+            }
+            else
+                /* Si no se pudo hacer la búsqueda mostrar el error. 
+                 * - Se especifica el control asociado al error y la
+                 * cadena de texto que mostrará el error.**/
+                searchErrorProvider.SetError(button_WebSearch, "Tú búsqueda no es válida.\nNo ingresaste texto o no seleccionaste método de ordenación.");
         }
         /* Método que activará la búsqueda actual al presionar la tecla "enter"
          *  cuando se esté en la barra de búsqueda.

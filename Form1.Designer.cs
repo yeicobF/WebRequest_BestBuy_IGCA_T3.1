@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBox_WebQuery = new System.Windows.Forms.TextBox();
             this.label_InformationOfProject = new System.Windows.Forms.Label();
             this.label_WebQuery = new System.Windows.Forms.Label();
@@ -38,6 +39,8 @@
             this.label_ProductInformation = new System.Windows.Forms.Label();
             this.label_Products = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.searchErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.searchErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox_WebQuery
@@ -190,6 +193,12 @@
             this.label1.Text = "INFORMACIÓN DEL PRODUCTO";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // searchErrorProvider
+            // 
+            this.searchErrorProvider.BlinkRate = 200;
+            this.searchErrorProvider.ContainerControl = this;
+            this.searchErrorProvider.Tag = "Errors";
+            // 
             // SearchWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,7 +221,10 @@
             this.RightToLeftLayout = true;
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Tag = "Form";
             this.Text = "Search From Best Buy Website";
+            ((System.ComponentModel.ISupportInitialize)(this.searchErrorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -230,6 +242,7 @@
         private System.Windows.Forms.Label label_Products;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_ProductInformation;
+        private System.Windows.Forms.ErrorProvider searchErrorProvider;
     }
 }
 

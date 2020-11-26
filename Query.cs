@@ -49,8 +49,22 @@ namespace _T3._1__WebRequest_con_BestBuy
              *  tiene elementos.**/
              if(productList.Count > 0)
                 productList.Clear();
+             /* Para hacer la búsqueda hay que hacer un String.Trim()
+              *     para que busque sin los espacios al inicio o
+              *     al final por si se ingresó así la búsqueda.
+              * Aunque esto es opcional realmente porque de cualquier
+              *     forma el sitio web decide si se puede hacer la
+              *     búsqueda o no, y nosotros solo la mandamos
+              *     tal como el usuario la hizo.**/
 
-            _query.Text = " SE PUEDE REALIZAR LA BÚSQUEDA. ";
+
+
+        }
+        /* Método que mostrará los nombres de los productos encontrados
+         *  en una lista de productos. El que se seleccione mostrará sus
+         *  detalles en la segunda ventana.**/
+        public static void ShowQueryResults()
+        {
 
         }
         /* Método estático que verifica si se puede hacer una búsqueda.
@@ -95,11 +109,15 @@ namespace _T3._1__WebRequest_con_BestBuy
             /* Si no entró en el Try significa que sí es posible hacer
              *  la búsqueda, pero si no entró significa que llegó hasta
              *  acá y saltó el pop-up, por lo que regresamos FALSE. **/
-            catch { } /* No hace nada en el catch porque quiero que
+            catch (System.NullReferenceException){ } /* No hace nada en el catch porque quiero que
                        * de cualquier forma si se llega acá,
                        * salga el pop-up.**/
             /* Mostrar el pop-up si hubo una excepción o la búsqueda
-             *  no es válida A.K.A. no hay texto en la textBox.**/
+             *  no es válida A.K.A. no hay texto en la textBox.
+             *  
+             * - SE UTILIZARÁ UN ERROR PROVIDER, pero se encontrará
+             * en el Form1.cs.**/
+            
             return false; /* No se pudo hacer la búsqueda.**/
         }
     }
