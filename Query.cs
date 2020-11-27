@@ -40,6 +40,12 @@ namespace _T3._1__WebRequest_con_BestBuy
         /* Variables estáticas que podrán ser accedidas en
          *  todos los métodos.**/
         private static string baseURL, query, sortBy;
+        /* Variables que indicarán tanto el número de productos encontrados
+         * con la búsqueda como el número de páginas de la búsqueda.**/
+        private static int numberOfFoundElements, numberOfFoundWebPages;
+        /* Getters públicos sin set para no poder cambiar los valores.**/
+        public static int NumberOfFoundElements { get { return numberOfFoundElements; } }
+        public static int NumberOfFoundWebPages { get { return numberOfFoundWebPages; } }
         /* Método que hará la búsqueda deseada recibiendo como
          *  parámetros la "query", que es la búsqueda, y la forma
          *  de ordenar "sortBy". 
@@ -53,6 +59,8 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  cuando se haya redirigido la búsqueda.**/
         public static void SearchQuery(TextBox _query, string _sortBy, Object[] errorAndCombobox)
         {
+            /* Inicializamos en 0 el número de elementos y páginas encontradas.**/
+            numberOfFoundElements = numberOfFoundWebPages = 0;
             /* Guardamos el texto de la consulta como cadena.**/
             query = _query.Text;
             /* baseURL: URL base para TODAS las búsquedas de Best Buy. **/
@@ -128,14 +136,10 @@ namespace _T3._1__WebRequest_con_BestBuy
                 /* Aquí ya hace todo el proceso de búsqueda de los productos al recorrer
                  *  todos los elementos de la página y guardar su nombre y URL.**/
                 GetAllElementsFromCurrentPageNumber(webpageSourceCode);
-
+                /* Aumentar el número de página actual para revisar la siguiente.**/
                 currentPageNumber++;
-                /* Esta cadena en el código fuente de la página indica
-                 *  que ya no hay resultados de la búsqueda:
-                 *      <p class=\"plp-no-results\">
-                 * Así podemos darnos cuenta de que ya no hay más resultados.
-                 * Aún así, esto lo podemos poner en un if para que no
-                 *  haga procedimientos innecesarios y salga con un break.**/
+                /* Aumentar el número de páginas encontradas.**/
+                numberOfFoundWebPages++;
             }
         }
         /* Método que hará el webRequest y regresará la URI
@@ -487,6 +491,8 @@ namespace _T3._1__WebRequest_con_BestBuy
                 /* Si llegó hasta aquí significa que no ha pasado la última
                     *  página y podemos instanciar un elemento de producto.**/
                 productList.Add(new Product(name, sku, itemType, itemCategory, modelNumber, publisher, releaseDate, customerPrice, regularPrice, url, brand));
+                /* Indicar que se encontró un nuevo elemento.**/
+                numberOfFoundElements++;
                 /* Imprimir para ver si los objetos se crearon correctamente.**/
                 productList.ElementAt(productList.Count - 1).PrintDetails();
             }
@@ -502,6 +508,12 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  encuentra actualmente en la última página.**/
         private static bool IsLastWebPage(string webpageSourceCode)
         {
+            /* Esta cadena en el código fuente de la página indica
+             *  que ya no hay resultados de la búsqueda:
+             *      <p class=\"plp-no-results\">
+             * Así podemos darnos cuenta de que ya no hay más resultados.
+             * Aún así, esto lo podemos poner en un if para que no
+             *  haga procedimientos innecesarios y salga con un break.**/
             return webpageSourceCode.Contains("<p class=\"plp-no-results\">");
         }
         /* Método que mostrará los nombres de los productos encontrados

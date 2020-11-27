@@ -239,12 +239,18 @@ namespace _T3._1__WebRequest_con_BestBuy
             if (!modelNumber.Equals(""))
                info.Text += "\r\n - NÚMERO DE MODELO: " + modelNumber;
             info.Text += "\r\n - SKU: " + sku;
-            //info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
             info.Text += "\r\n - CATEGORÍA: " + itemCategory;
-            info.Text += "\r\n - URL: " + url;
+            /* Línea vací anetre los textos.**/
             info.Text += "\r\n\r\n - NÚMERO DE RESEÑAS: " + reviewCount;
             info.Text += "\r\n - CALIFICACIÓN: " + averageOverallRating;
             info.Text += "\r\n\r\n - DESCRIPCIÓN: " + description;
+            /* Que el URL vaya al final de la página.**/
+            info.Text += "\r\n\r\n - URL: " + url;
+
+            /* Agregamos el URL a una etiqueta en donde se puede
+             *  acceder al enlace.**/
+
+
             /* Agregamos las características y reviews que están en listas
              *  en la cadena del Label de los detalles.**/
             //AppendCharacteristics(info);

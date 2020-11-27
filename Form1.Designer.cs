@@ -41,8 +41,9 @@
             this.searchErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.textBox_ProductDetails = new System.Windows.Forms.TextBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button_Reset = new System.Windows.Forms.Button();
+            this.button_Exit = new System.Windows.Forms.Button();
+            this.label_NumberOfFoundElements = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.searchErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -151,11 +152,12 @@
             this.listBox_Products.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox_Products.HorizontalScrollbar = true;
             this.listBox_Products.ItemHeight = 16;
-            this.listBox_Products.Location = new System.Drawing.Point(13, 110);
+            this.listBox_Products.Location = new System.Drawing.Point(13, 111);
             this.listBox_Products.Name = "listBox_Products";
-            this.listBox_Products.Size = new System.Drawing.Size(437, 338);
+            this.listBox_Products.Size = new System.Drawing.Size(437, 290);
             this.listBox_Products.TabIndex = 3;
             this.listBox_Products.Tag = "Information";
+            this.listBox_Products.SelectedIndexChanged += new System.EventHandler(this.listBox_Products_SelectedIndexChanged);
             this.listBox_Products.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox_Products_KeyDown);
             // 
             // label_Products
@@ -199,7 +201,7 @@
             this.textBox_ProductDetails.Name = "textBox_ProductDetails";
             this.textBox_ProductDetails.ReadOnly = true;
             this.textBox_ProductDetails.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_ProductDetails.Size = new System.Drawing.Size(330, 458);
+            this.textBox_ProductDetails.Size = new System.Drawing.Size(330, 417);
             this.textBox_ProductDetails.TabIndex = 105;
             this.textBox_ProductDetails.Tag = "Information";
             this.textBox_ProductDetails.Text = "Descripción del producto seleccionado.";
@@ -216,25 +218,65 @@
             this.linkLabel1.Text = "Aquí podría ir el URL del producto seleccionado.";
             this.linkLabel1.Visible = false;
             // 
-            // button1
+            // button_Reset
             // 
-            this.button1.Location = new System.Drawing.Point(584, 366);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 107;
-            this.button1.Text = "Borrar todo";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
+            this.button_Reset.AutoSize = true;
+            this.button_Reset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_Reset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button_Reset.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button_Reset.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button_Reset.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
+            this.button_Reset.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Crimson;
+            this.button_Reset.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
+            this.button_Reset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Reset.Font = new System.Drawing.Font("Malgun Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_Reset.ForeColor = System.Drawing.Color.White;
+            this.button_Reset.Location = new System.Drawing.Point(456, 521);
+            this.button_Reset.Margin = new System.Windows.Forms.Padding(0);
+            this.button_Reset.Name = "button_Reset";
+            this.button_Reset.Size = new System.Drawing.Size(117, 31);
+            this.button_Reset.TabIndex = 109;
+            this.button_Reset.Tag = "Query";
+            this.button_Reset.Text = "Reiniciar todo";
+            this.button_Reset.UseVisualStyleBackColor = false;
+            this.button_Reset.Click += new System.EventHandler(this.button_Reset_Click);
             // 
-            // button2
+            // button_Exit
             // 
-            this.button2.Location = new System.Drawing.Point(584, 405);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 108;
-            this.button2.Text = "Salir";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
+            this.button_Exit.AutoSize = true;
+            this.button_Exit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_Exit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button_Exit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button_Exit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button_Exit.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
+            this.button_Exit.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Crimson;
+            this.button_Exit.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
+            this.button_Exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_Exit.Font = new System.Drawing.Font("Malgun Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_Exit.ForeColor = System.Drawing.Color.White;
+            this.button_Exit.Location = new System.Drawing.Point(735, 521);
+            this.button_Exit.Margin = new System.Windows.Forms.Padding(0);
+            this.button_Exit.Name = "button_Exit";
+            this.button_Exit.Size = new System.Drawing.Size(51, 31);
+            this.button_Exit.TabIndex = 110;
+            this.button_Exit.Tag = "Query";
+            this.button_Exit.Text = "Salir";
+            this.button_Exit.UseVisualStyleBackColor = false;
+            this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
+            // 
+            // label_NumberOfFoundElements
+            // 
+            this.label_NumberOfFoundElements.BackColor = System.Drawing.Color.DarkRed;
+            this.label_NumberOfFoundElements.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label_NumberOfFoundElements.Font = new System.Drawing.Font("Malgun Gothic", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_NumberOfFoundElements.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label_NumberOfFoundElements.Location = new System.Drawing.Point(13, 403);
+            this.label_NumberOfFoundElements.Name = "label_NumberOfFoundElements";
+            this.label_NumberOfFoundElements.Size = new System.Drawing.Size(438, 53);
+            this.label_NumberOfFoundElements.TabIndex = 111;
+            this.label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: --\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA" +
+    ": --\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: --";
+            this.label_NumberOfFoundElements.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SearchWindow
             // 
@@ -242,8 +284,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(804, 561);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label_NumberOfFoundElements);
+            this.Controls.Add(this.button_Exit);
+            this.Controls.Add(this.button_Reset);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_Products);
@@ -284,8 +327,9 @@
         private System.Windows.Forms.ErrorProvider searchErrorProvider;
         private System.Windows.Forms.TextBox textBox_ProductDetails;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button_Reset;
+        private System.Windows.Forms.Button button_Exit;
+        private System.Windows.Forms.Label label_NumberOfFoundElements;
     }
 }
 

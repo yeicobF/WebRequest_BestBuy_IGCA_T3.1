@@ -65,6 +65,11 @@ namespace _T3._1__WebRequest_con_BestBuy
                 * - Hay que verificar que este texto no exista ya.**/
                 if(!label_Products.Text.Contains("\n - PRESIONA ENTER EN UN PRODUCTO PARA VER DETALLES -"))
                     label_Products.Text += "\n - PRESIONA ENTER EN UN PRODUCTO PARA VER DETALLES - ";
+                /* Mostrar en pantalla el número de elementos encontrados
+                 *  y el número de páginas encontradas.**/
+                label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: " + Query.NumberOfFoundElements;
+                label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: " + Query.NumberOfFoundWebPages;
+                label_NumberOfFoundElements.Text += "\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: --";
             }
             else
                 /* Si no se pudo hacer la búsqueda mostrar el error. 
@@ -116,6 +121,59 @@ namespace _T3._1__WebRequest_con_BestBuy
                 /* De esta forma accedemos al producto del índice seleccionado
                  *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
                 Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(textBox_ProductDetails);
+        }
+        /* Método que al presionar el botón que indica el reinicio de todo,
+         *  pondrá todos los elementos como al inicio:
+         *      - Cuadro de búsqueda vacío
+         *      - Índice de categoría: -1, así indica que no hay selección
+         *      - ListBox con elementos quitárselos
+         *      - TextBox con descripción de productos reiniciar
+         *      - ErrorProvider con ComboBox y el botón de buscar reiniciar.**/
+        private void button_Reset_Click(object sender, EventArgs e)
+        {
+            /* Limpiar cuadro de búsqueda**/
+            textBox_WebQuery.Text = "";
+            /* Quitar selección de "Ordenar por: "**/
+            comboBox_SortBy.SelectedIndex = -1;
+            /* Borrar la lista de los productos. **/
+            listBox_Products.Items.Clear();
+            /* Borrar los detalles de productos sí es que hay y poner el texto predeterminado.**/
+            textBox_ProductDetails.Text = "Descripción del producto seleccionado.";
+            /* Borar el número de elementos encontrados y poner como está al incio.**/
+            label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: --";
+            label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: --";
+            label_NumberOfFoundElements.Text += "\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: --";
+            /* Borrar el error de "searchErrorProvider" si es que había alguno. **/
+            searchErrorProvider.SetError(comboBox_SortBy, String.Empty);
+            searchErrorProvider.SetError(button_WebSearch, String.Empty);
+        }
+        /* Método que termina el programa.**/
+        private void button_Exit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        /* Método que ostrará el número del objeto que se ha seleccionado.
+         * Va del 1 al numberOfFoundObjects.**/
+        private void listBox_Products_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: " + Query.NumberOfFoundElements;
+            label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: " + Query.NumberOfFoundWebPages;
+            /* Se le aumenta 1 al índice porque el índice va desde el 0
+             *  y el número de elemento comienza desde el 1.**/
+            label_NumberOfFoundElements.Text += "\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: " + (listBox_Products.SelectedIndex + 1);
+        }
+        /* Método que modifica el cuadro de texto en donde indica:
+         *      
+         *      label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: --";
+                label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: --";
+                label_NumberOfFoundElements.Text += "\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: --";
+         * 
+         * Cambia los valores dependiendo de los parámetros que enviemos.**/
+        private void ModifyFoundElementsText(string numberOFoundElements, string numberOfFoundWebPages, string currentSelectedElement)
+        {
+            label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: " + numberOFoundElements;
+            label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: " + numberOfFoundWebPages;
+            label_NumberOfFoundElements.Text += "\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: " + currentSelectedElement;
         }
     }
 }
