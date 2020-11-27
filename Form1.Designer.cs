@@ -40,6 +40,7 @@
             this.label_Products = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.searchErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             ((System.ComponentModel.ISupportInitialize)(this.searchErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,7 +65,7 @@
             this.label_InformationOfProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label_InformationOfProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_InformationOfProject.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label_InformationOfProject.Location = new System.Drawing.Point(32, 460);
+            this.label_InformationOfProject.Location = new System.Drawing.Point(36, 460);
             this.label_InformationOfProject.Name = "label_InformationOfProject";
             this.label_InformationOfProject.Size = new System.Drawing.Size(390, 92);
             this.label_InformationOfProject.TabIndex = 100;
@@ -153,6 +154,7 @@
             this.listBox_Products.Size = new System.Drawing.Size(437, 338);
             this.listBox_Products.TabIndex = 3;
             this.listBox_Products.Tag = "Information";
+            this.listBox_Products.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox_Products_KeyDown);
             // 
             // label_ProductInformation
             // 
@@ -202,12 +204,20 @@
             this.searchErrorProvider.ContainerControl = this;
             this.searchErrorProvider.Tag = "Errors";
             // 
+            // vScrollBar1
+            // 
+            this.vScrollBar1.Location = new System.Drawing.Point(768, 94);
+            this.vScrollBar1.Name = "vScrollBar1";
+            this.vScrollBar1.Size = new System.Drawing.Size(17, 458);
+            this.vScrollBar1.TabIndex = 105;
+            // 
             // SearchWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(804, 561);
+            this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_Products);
             this.Controls.Add(this.label_ProductInformation);
@@ -246,6 +256,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label_ProductInformation;
         private System.Windows.Forms.ErrorProvider searchErrorProvider;
+        private System.Windows.Forms.VScrollBar vScrollBar1;
     }
 }
 

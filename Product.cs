@@ -173,21 +173,38 @@ namespace _T3._1__WebRequest_con_BestBuy
                                                    ref int currentIndex, ref int lastIndex);
          * 
          * **/
-        public void GetDetails()
+        private void GetDetails()
         {
             /* Hacer consulta a la URL. **/
-            /* DESCRIPCIÓN:
+            /* 
+             * 1. NÚMERO DE REVIEWS: 
+             *   - Inicio: "reviewCount":
+             *   - Final: ,
+             * 2. RATING(CALIFICACIÓN) PROMEDIO:
+             *   - INICIO: "averageOverallRating":
+             *   - FIN: ,
+             * 3. DESCRIPCIÓN:
              *   - Primer encuentro: < div class="bbmx-product-description">
              *   - Inicio de descripción: <!-- react-text: 4 -->
              *   - Final de descripción: <!-- /react-text -->
-             * NÚMERO DE REVIEWS: 
-             *   - Inicio: "reviewCount":
-             *   - Final: ,
-             * RATING(CALIFICACIÓN) PROMEDIO:
-             *   - INICIO: "averageOverallRating":
-             *   - FIN: ,
              **/
+            string sourceCode = "";
+            /* Los índices que irán extrayendo los elementos
+             *  de la cadena del código fuente.**/
+            int firstIndex = 0, lastIndex = 0;
+            Query.MakeWebRequest(url, ref sourceCode);
+            /* Hacer una subcadena desde el índice que acabamos de encontrar.**/
+            sourceCode = sourceCode.Substring(firstIndex, sourceCode.Length - firstIndex);
+            /* Ahora sí utilizar el método para obtener la descripción.
+             * Enviaré el delimitador inicial y el final.**/
+            reviewCount = Query.GetElementFromWebPage(ref sourceCode, "\"reviewCount\":", ",", ref firstIndex, ref lastIndex);
+            averageOverallRating = Query.GetElementFromWebPage(ref sourceCode, "\"averageOverallRating\":", ",",  ref firstIndex, ref lastIndex);
 
+            /* Aquí guardamos el primer índice en donde se encuentra 
+             * la descripción más adelante.**/
+            firstIndex = lastIndex = sourceCode.IndexOf("< div class=\"bbmx - product - description\">") + "< div class=\"bbmx - product - description\">".Length;
+            description = Query.GetElementFromWebPage(ref sourceCode, "<!-- react-text: 4 -->", "<!-- /react-text -->", ref firstIndex, ref lastIndex);
+            //Console.WriteLine("\n\n -> Description: {0}, reviewCount: {1}, averageOverallRating: {2}\n\n", description, reviewCount, averageOverallRating);
         }
         /* Método para mostrar la información del producto
          *  en un cuadro de texto.
@@ -198,6 +215,9 @@ namespace _T3._1__WebRequest_con_BestBuy
                 averageOverallRating**/
         public void ShowDetails(Label info)
         {
+            /* Antes de mostrar los detalles hay que obtener
+             *  los que faltan:**/
+            GetDetails();
             /* Reiniciamos el texto de la etiqueta por si tenía
              *  algo escrito.**/
             info.Text = "";
@@ -210,8 +230,8 @@ namespace _T3._1__WebRequest_con_BestBuy
             if (!publisher.Equals(""))
                 info.Text += "\n - PUBLISHER: " + publisher;
             info.Text += "\n - SKU: " + sku;
-            info.Text += "\n - PRECIO" + customerPrice;
-            info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
+            info.Text += "\n - PRECIO: " + customerPrice;
+            //info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
             info.Text += "\n - CATEGORÍA: " + itemCategory;
             // Si el producto sí tiene fecha de lanzamiento.
             if(!releaseDate.Equals(""))

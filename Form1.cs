@@ -107,5 +107,14 @@ namespace _T3._1__WebRequest_con_BestBuy
                  *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
                 Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(label_ProductInformation);
         }
+
+        private void listBox_Products_KeyDown(object sender, KeyEventArgs e)
+        {
+            /* Hay que ver si la lista tiene elementos o no.**/
+            if (listBox_Products.Items.Count > 0 && e.KeyCode == Keys.Enter)
+                /* De esta forma accedemos al producto del índice seleccionado
+                 *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
+                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(label_ProductInformation);
+        }
     }
 }

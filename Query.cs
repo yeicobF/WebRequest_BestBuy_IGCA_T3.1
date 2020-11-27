@@ -140,7 +140,7 @@ namespace _T3._1__WebRequest_con_BestBuy
         }
         /* Método que hará el webRequest y regresará la URI
          *  obtenida junto con el código fuente de la página.**/
-        private static Uri MakeWebRequest(string URL, ref string webpageSourceCode)
+        public static Uri MakeWebRequest(string URL, ref string webpageSourceCode)
         {
             // Create a request for the URL. 		
             //WebRequest request = WebRequest.Create("AQUÍ VA LA URL");
