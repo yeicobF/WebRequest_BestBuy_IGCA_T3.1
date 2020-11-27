@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.IO;
 
 /* CLASE PARA GUARDAR LOS ELEMENTOS ENCONTRADOS EN LA BÚSQUEDA.
  * Guardará el elemento con su nombre y enlace al producto.
@@ -61,10 +63,46 @@ namespace _T3._1__WebRequest_con_BestBuy
         }
         /* Método que obtendrá la información restante
          *  del producto haciendo una consulta a la URL
-         *  ya guardada en memoria. **/
+         *  ya guardada en memoria. 
+         *  
+         *  - DATOS A OBTENER:
+         *  model, publisher, sku, price, rating, description, releaseDate;**/
         public void GetDetails()
         {
             /* Hacer consulta a la URL. **/
+            // Create a request for the URL. 		
+            //WebRequest request = WebRequest.Create("AQUÍ VA LA URL");
+            WebRequest request = WebRequest.Create(url);
+            // If required by the server, set the credentials.
+            request.Credentials = CredentialCache.DefaultCredentials;
+            // Get the response.
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
+
+            // Display the status.
+            // Aquí escribimos el estado en la consola.
+            //Console.WriteLine(response.StatusDescription);
+
+            // Get the stream containing content returned by the server.
+            // Aquí se guarda un archivo en memoria con la información obtenida en el response.
+            Stream dataStream = response.GetResponseStream();
+
+            // Open the stream using a StreamReader for easy access.
+            // Con este lector podemos iterar en el archivo.
+            StreamReader reader = new StreamReader(dataStream);
+
+            // Read the content.
+            // Guardamos el texto del archivo guardado en memoria para luego mostrarlo.
+            string responseFromServer = reader.ReadToEnd();
+
+            // Display the content.
+            //Console.WriteLine(responseFromServer);
+
+            // Cleanup the streams and the response.
+            reader.Close();
+            dataStream.Close();
+            response.Close();
         }
         /* Método para mostrar la información del producto
          *  en un cuadro de texto.**/

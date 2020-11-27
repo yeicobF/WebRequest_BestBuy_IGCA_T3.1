@@ -45,6 +45,7 @@ namespace _T3._1__WebRequest_con_BestBuy
             if (Query.IsSearchable(textBox_WebQuery, comboBox_SortBy))
             {
                 /* Borrar el error de "searchErrorProvider" si es que había alguno. **/
+                searchErrorProvider.SetError(comboBox_SortBy, String.Empty);
                 searchErrorProvider.SetError(button_WebSearch, String.Empty);
                 /* Realizar la búsqueda tomando el elemento a buscar y la
                  *  categoría.**/
