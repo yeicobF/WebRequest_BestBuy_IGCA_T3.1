@@ -58,13 +58,13 @@ namespace _T3._1__WebRequest_con_BestBuy
 
                 /* Método que después de hacer la búsqueda mostrará la lista
                  *  de productos que encontró y que se pueden seleccionar.**/
-                Query.ShowQueryResults();
+                Query.ShowQueryResults(listBox_Products);
 
                 /* Cuando ya se muestre la lista de productos para seleccionar,
                 *  agregar un texto que indique que seleccione un producto.
                 * - Hay que verificar que este texto no exista ya.**/
-                if(!label_Products.Text.Contains("\n - SELECCIONE UN PRODUCTO PARA VER DETALLES -"))
-                    label_Products.Text += "\n - SELECCIONE UN PRODUCTO PARA VER DETALLES -";
+                if(!label_Products.Text.Contains("\n - DÉ CLICK A UN PRODUCTO PARA VER DETALLES -"))
+                    label_Products.Text += "\n - DÉ CLICK A UN PRODUCTO PARA VER DETALLES -";
             }
             else
                 /* Si no se pudo hacer la búsqueda mostrar el error. 

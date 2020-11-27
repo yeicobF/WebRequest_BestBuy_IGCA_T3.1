@@ -421,9 +421,13 @@ namespace _T3._1__WebRequest_con_BestBuy
         /* Método que mostrará los nombres de los productos encontrados
          *  en una lista de productos. El que se seleccione mostrará sus
          *  detalles en la segunda ventana.**/
-        public static void ShowQueryResults()
+        public static void ShowQueryResults(ListBox listBox)
         {
-
+            /* Si la lista ya tiene elementos, hay que quitarlos.**/
+            listBox.Items.Clear();
+            /* Agregar todos los productos a la lista.**/
+            for(int i = 0; i < productList.Count; i++)
+                listBox.Items.Add(productList.ElementAt(i).Name);
         }
         /* Método estático que verifica si se puede hacer una búsqueda.
          * Para esto tiene que haber un texto en el cuadro de búsqueda.

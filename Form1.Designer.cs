@@ -64,7 +64,7 @@
             this.label_InformationOfProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label_InformationOfProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_InformationOfProject.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label_InformationOfProject.Location = new System.Drawing.Point(12, 460);
+            this.label_InformationOfProject.Location = new System.Drawing.Point(30, 460);
             this.label_InformationOfProject.Name = "label_InformationOfProject";
             this.label_InformationOfProject.Size = new System.Drawing.Size(390, 92);
             this.label_InformationOfProject.TabIndex = 100;
@@ -146,10 +146,11 @@
             this.listBox_Products.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listBox_Products.Cursor = System.Windows.Forms.Cursors.Hand;
             this.listBox_Products.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox_Products.HorizontalScrollbar = true;
             this.listBox_Products.ItemHeight = 16;
             this.listBox_Products.Location = new System.Drawing.Point(13, 110);
             this.listBox_Products.Name = "listBox_Products";
-            this.listBox_Products.Size = new System.Drawing.Size(389, 338);
+            this.listBox_Products.Size = new System.Drawing.Size(437, 338);
             this.listBox_Products.TabIndex = 3;
             this.listBox_Products.Tag = "Information";
             // 
@@ -176,7 +177,7 @@
             this.label_Products.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label_Products.Location = new System.Drawing.Point(12, 62);
             this.label_Products.Name = "label_Products";
-            this.label_Products.Size = new System.Drawing.Size(390, 46);
+            this.label_Products.Size = new System.Drawing.Size(438, 46);
             this.label_Products.TabIndex = 103;
             this.label_Products.Text = "LISTA DE PRODUCTOS";
             this.label_Products.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
