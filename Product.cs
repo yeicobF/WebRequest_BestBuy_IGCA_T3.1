@@ -213,7 +213,7 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  name, sku, itemType, itemCategory, modelNumber, publisher, releaseDate,
                 customerPrice, regularPrice, url, brand, description, reviewCount,
                 averageOverallRating**/
-        public void ShowDetails(Label info)
+        public void ShowDetails(TextBox info)
         {
             /* Antes de mostrar los detalles hay que obtener
              *  los que faltan:**/
@@ -223,24 +223,28 @@ namespace _T3._1__WebRequest_con_BestBuy
             info.Text = "";
             /* Mandar la información al cuadro de texto. **/
             info.Text += " - NOMBRE DEL PRODUCTO: " + name;
-            // Si sí tiene detalles del modelo el producto.
-            if (!modelNumber.Equals(""))
-               info.Text += "\n - NÚMERO DE MODELO: " + modelNumber;
+            info.Text += "\r\n - PRECIO: " + customerPrice;
+            // Si el producto sí tiene fecha de lanzamiento.
+            if (!releaseDate.Equals(""))
+                info.Text += "\r\n - FECHA DE LANZAMIENTO: " + releaseDate;
+            info.Text += "\r\n - MARCA: " + brand;
             // Si sí tiene detalles del publisher el producto.
             if (!publisher.Equals(""))
-                info.Text += "\n - PUBLISHER: " + publisher;
-            info.Text += "\n - SKU: " + sku;
-            info.Text += "\n - PRECIO: " + customerPrice;
+                info.Text += "\r\n - PUBLISHER: " + publisher;
+
+            /* Separar hasta publisher por una línea vacía.**/
+            info.Text += "\r\n";
+
+            // Si sí tiene detalles del modelo el producto.
+            if (!modelNumber.Equals(""))
+               info.Text += "\r\n - NÚMERO DE MODELO: " + modelNumber;
+            info.Text += "\r\n - SKU: " + sku;
             //info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
-            info.Text += "\n - CATEGORÍA: " + itemCategory;
-            // Si el producto sí tiene fecha de lanzamiento.
-            if(!releaseDate.Equals(""))
-                info.Text += "\n - FECHA DE LANZAMIENTO: " + releaseDate;
-            info.Text += "\n - MARCA: " + brand;
-            info.Text += "\n - URL: " + url;
-            info.Text += "\n\n - NÚMERO DE RESEÑAS: " + reviewCount;
-            info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
-            info.Text += "\n - DESCRIPCIÓN: " + description;
+            info.Text += "\r\n - CATEGORÍA: " + itemCategory;
+            info.Text += "\r\n - URL: " + url;
+            info.Text += "\r\n\r\n - NÚMERO DE RESEÑAS: " + reviewCount;
+            info.Text += "\r\n - CALIFICACIÓN: " + averageOverallRating;
+            info.Text += "\r\n\r\n - DESCRIPCIÓN: " + description;
             /* Agregamos las características y reviews que están en listas
              *  en la cadena del Label de los detalles.**/
             //AppendCharacteristics(info);

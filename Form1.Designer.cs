@@ -36,11 +36,13 @@
             this.comboBox_SortBy = new System.Windows.Forms.ComboBox();
             this.button_WebSearch = new System.Windows.Forms.Button();
             this.listBox_Products = new System.Windows.Forms.ListBox();
-            this.label_ProductInformation = new System.Windows.Forms.Label();
             this.label_Products = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.searchErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
+            this.textBox_ProductDetails = new System.Windows.Forms.TextBox();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.searchErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -156,22 +158,6 @@
             this.listBox_Products.Tag = "Information";
             this.listBox_Products.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox_Products_KeyDown);
             // 
-            // label_ProductInformation
-            // 
-            this.label_ProductInformation.AutoEllipsis = true;
-            this.label_ProductInformation.BackColor = System.Drawing.SystemColors.Window;
-            this.label_ProductInformation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label_ProductInformation.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.label_ProductInformation.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_ProductInformation.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.label_ProductInformation.Location = new System.Drawing.Point(456, 94);
-            this.label_ProductInformation.Name = "label_ProductInformation";
-            this.label_ProductInformation.Size = new System.Drawing.Size(330, 458);
-            this.label_ProductInformation.TabIndex = 4;
-            this.label_ProductInformation.Tag = "Information";
-            this.label_ProductInformation.Text = "Información del producto.";
-            this.label_ProductInformation.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox_Products_Click);
-            // 
             // label_Products
             // 
             this.label_Products.BackColor = System.Drawing.Color.DarkRed;
@@ -204,12 +190,51 @@
             this.searchErrorProvider.ContainerControl = this;
             this.searchErrorProvider.Tag = "Errors";
             // 
-            // vScrollBar1
+            // textBox_ProductDetails
             // 
-            this.vScrollBar1.Location = new System.Drawing.Point(768, 94);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(17, 458);
-            this.vScrollBar1.TabIndex = 105;
+            this.textBox_ProductDetails.BackColor = System.Drawing.SystemColors.Window;
+            this.textBox_ProductDetails.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_ProductDetails.Location = new System.Drawing.Point(456, 94);
+            this.textBox_ProductDetails.Multiline = true;
+            this.textBox_ProductDetails.Name = "textBox_ProductDetails";
+            this.textBox_ProductDetails.ReadOnly = true;
+            this.textBox_ProductDetails.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox_ProductDetails.Size = new System.Drawing.Size(330, 458);
+            this.textBox_ProductDetails.TabIndex = 105;
+            this.textBox_ProductDetails.Tag = "Information";
+            this.textBox_ProductDetails.Text = "Descripción del producto seleccionado.";
+            this.textBox_ProductDetails.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(502, 317);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(239, 13);
+            this.linkLabel1.TabIndex = 106;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Aquí podría ir el URL del producto seleccionado.";
+            this.linkLabel1.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(584, 366);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 107;
+            this.button1.Text = "Borrar todo";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(584, 405);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 108;
+            this.button2.Text = "Salir";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
             // 
             // SearchWindow
             // 
@@ -217,10 +242,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(804, 561);
-            this.Controls.Add(this.vScrollBar1);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_Products);
-            this.Controls.Add(this.label_ProductInformation);
             this.Controls.Add(this.listBox_Products);
             this.Controls.Add(this.button_WebSearch);
             this.Controls.Add(this.comboBox_SortBy);
@@ -228,6 +254,7 @@
             this.Controls.Add(this.label_WebQuery);
             this.Controls.Add(this.label_InformationOfProject);
             this.Controls.Add(this.textBox_WebQuery);
+            this.Controls.Add(this.textBox_ProductDetails);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(900, 600);
             this.Name = "SearchWindow";
@@ -254,9 +281,11 @@
         private System.Windows.Forms.ListBox listBox_Products;
         private System.Windows.Forms.Label label_Products;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label_ProductInformation;
         private System.Windows.Forms.ErrorProvider searchErrorProvider;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
+        private System.Windows.Forms.TextBox textBox_ProductDetails;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 

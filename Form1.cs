@@ -63,8 +63,8 @@ namespace _T3._1__WebRequest_con_BestBuy
                 /* Cuando ya se muestre la lista de productos para seleccionar,
                 *  agregar un texto que indique que seleccione un producto.
                 * - Hay que verificar que este texto no exista ya.**/
-                if(!label_Products.Text.Contains("\n - DÉ CLICK A UN PRODUCTO PARA VER DETALLES -"))
-                    label_Products.Text += "\n - DÉ CLICK A UN PRODUCTO PARA VER DETALLES -";
+                if(!label_Products.Text.Contains("\n - PRESIONA ENTER EN UN PRODUCTO PARA VER DETALLES -"))
+                    label_Products.Text += "\n - PRESIONA ENTER EN UN PRODUCTO PARA VER DETALLES - ";
             }
             else
                 /* Si no se pudo hacer la búsqueda mostrar el error. 
@@ -105,16 +105,17 @@ namespace _T3._1__WebRequest_con_BestBuy
             if(listBox_Products.Items.Count > 0)
                 /* De esta forma accedemos al producto del índice seleccionado
                  *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
-                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(label_ProductInformation);
+                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(textBox_ProductDetails);
         }
 
         private void listBox_Products_KeyDown(object sender, KeyEventArgs e)
         {
-            /* Hay que ver si la lista tiene elementos o no.**/
-            if (listBox_Products.Items.Count > 0 && e.KeyCode == Keys.Enter)
+            /* Hay que ver si la lista tiene elementos o no.
+             * listBox_Products.SelectedIndex = -1 significa que no hay nada seleccionado.**/
+            if (listBox_Products.Items.Count > 0 && listBox_Products.SelectedIndex >= 0 && e.KeyCode == Keys.Enter)
                 /* De esta forma accedemos al producto del índice seleccionado
                  *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
-                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(label_ProductInformation);
+                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(textBox_ProductDetails);
         }
     }
 }
