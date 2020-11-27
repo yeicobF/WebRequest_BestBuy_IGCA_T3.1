@@ -24,12 +24,42 @@ namespace _T3._1__WebRequest_con_BestBuy
          * reviews:
          *  También agregué una lista de las reviews.
          *  Se podrían mostrar unas 5 al menos.*/
-        List<string> characteristics, reviews;
+        // List<string> characteristics, reviews;
         /* Para los detalles del producto. 
          * - model o publisher varían. Estos se encuentran a veces y a veces no
          *      en los detalles del producto.
          * - releaseDate también es opcional. No sale en todos los productos. **/
-        string name, url, model, publisher, sku, price, rating, description, releaseDate;
+        /* 
+         * VALORES POSIBLES DE ENCONTRAR DESDE LA VISTA GENERAL DE LA BÚSQUEDA:
+         * [Podría pasar estos valores mediante el constructor]
+         *      * Name: title
+         *      * SKU: skuId
+         *      * Item type: itemType
+         *      * Item category: itemCategory
+         *      * Model number: modelNumber
+         *      * Publisher: publisher
+         *      * Release date: releaseDate
+         *      * Price: customerPrice
+         *      * Regular price: regularPrice
+         *      * Imagen (en .jpg, por si la quisiera mostrar): imageURL
+         *      * URL: seoPdpUrl
+         *      * Brand: brand
+         * VALORES POSIBLES DE ENCONTRAR DESDE EL URL DEL PRODUCTO.
+         *      * DESCRIPCIÓN:
+         *          Primer encuentro: <div class="bbmx-product-description">
+         *          Inicio de descripción: <!-- react-text: 4 -->
+         *          Final de descripción: <!-- /react-text -->
+         *      * NÚMERO DE REVIEWS: 
+         *          Inicio: "reviewCount":
+         *          Final: ,
+         *      * RATING (CALIFICACIÓN) PROMEDIO:
+         *          INICIO: "averageOverallRating":
+         *          FIN: ,
+         */
+        // string name, url, model, publisher, sku, price, rating, description, releaseDate;
+        string name, sku, itemType, itemCategory, modelNumber, publisher, releaseDate,
+                customerPrice, regularPrice, url, brand, description, reviewCount,
+                averageOverallRating;
         /* Manejo de variables con propiedades para utilizar un
          *  Getter sin tener que poner Product.GetName(), sino
          *  Product.Name, sin más.
@@ -43,13 +73,28 @@ namespace _T3._1__WebRequest_con_BestBuy
         }
         /* Lo mismo que arriba pero en una línea.**/
         public string URL { get { return url; } }
+        /* PARÁMETROS PARA EL CONSTRUCTOR, ya que se pueden
+         * conseguir desde la búsqueda general.
+         * 
+         * * Name: title
+         * * SKU: skuId
+         * * Item type: itemType
+         * * Item category: itemCategory
+         * * Model number: modelNumber
+         * * Publisher: publisher
+         * * Release date: releaseDate
+         * * Price: customerPrice
+         * * Regular price: regularPrice
+         * * Imagen (en .jpg, por si la quisiera mostrar): imageURL
+         * * URL: seoPdpUrl
+         * * Brand: brand**/
         public Product(string name, string url)
         {
             this.name = name;
             this.url = url;
             /* Inicialización de las listas de cadenas. **/
-            characteristics = new List<string>();
-            reviews = new List<string>(5); // Lista de 5 características.
+            // characteristics = new List<string>();
+            // reviews = new List<string>(5); // Lista de 5 características.
             /* Inicialización de las cadenas. Necesario en el caso de las variables
              *  en donde no se muestran algunos detalles. Servirá para evaluar si la
              *  cadena está vacía no mostrar la info. **/
@@ -64,50 +109,88 @@ namespace _T3._1__WebRequest_con_BestBuy
         /* Método que obtendrá la información restante
          *  del producto haciendo una consulta a la URL
          *  ya guardada en memoria. 
+         * Para esto utilizaremos el método:
+         * 
+         *      Grid.private static Uri MakeWebRequest(string URL, ref string webpageSourceCode);
+         * 
+         * Aunque no requerimos la URI, solo el código fuente.
+         * Después de eso utilizaremos el método:
+         * 
+         *      Grid.public static string GetElementFromWebPage(ref string substrInCurrIndex, string initialDelimiter,
+                                                           ref int currentIndex, ref int lastIndex);
+         * 
+         * Ahí mandaremos los identificadores para cada elemento, pero antes
+         *  de hacer la búsqueda hay que ver si el dato se encuentra
+         *  en el sitio web con el método:
          *  
-         *  - DATOS A OBTENER:
-         *  model, publisher, sku, price, rating, description, releaseDate;**/
+         *      Grid.public static bool IsElementInWebPage(string webpageSourceCoude, string element);
+         *  
+         *  Necesitaremos tener una cadena que se vaya modificando
+         *      mientras se hacen las búsquedas, que se vaya
+         *      convirtiendo en subcadenas.
+         *  
+         * - DATOS A OBTENER:
+         *  model, publisher, sku, price, rating, description, releaseDate;
+         *  
+         * - IDENTIFICADORES PARA CADA ATRIBUTO EN ORDEN:
+         *  Algunos datos se encuentran en la página con todos los
+         *   objetos, que son los siguientes:
+         *      * Name: title
+         *      * SKU: skuId
+         *      * Item type: itemType
+         *      * Item category: itemCategory
+         *      * Model number: modelNumber
+         *      * Publisher: publisher
+         *      * Release date: releaseDate
+         *      * Price: customerPrice
+         *      * Regular price: regularPrice
+         *      * Imagen (en .jpg, por si la quisiera mostrar): imageURL
+         *      * URL: seoPdpUrl
+         *      * Brand: brand
+         * Datos que solo obtenemos desde el URL del producto:
+         *  - Los identificadores aquí son diferentes, por lo que lo tendremos que hacer de otra forma.
+         *      * DESCRIPCIÓN:
+         *          Primer encuentro: <div class="bbmx-product-description">
+         *          Inicio de descripción: <!-- react-text: 4 -->
+         *          Final de descripción: <!-- /react-text -->
+         *      * NÚMERO DE REVIEWS: 
+         *          Inicio: "reviewCount":
+         *          Final: ,
+         *      * RATING (CALIFICACIÓN) PROMEDIO:
+         *          INICIO: "averageOverallRating":
+         *          FIN: ,
+         *          
+         * - Esto de arriba es lo único que pondría del URL directamente.
+         * - Método a utilizar para hacer la búsqueda personalizada:
+         *      
+         *      Grid.public static string GetElementFromWebPage(ref string substrInCurrIndex,
+                                                   string initialDelimiter, string finalDelimiter,
+                                                   ref int currentIndex, ref int lastIndex);
+         * 
+         * **/
         public void GetDetails()
         {
             /* Hacer consulta a la URL. **/
-            // Create a request for the URL. 		
-            //WebRequest request = WebRequest.Create("AQUÍ VA LA URL");
-            WebRequest request = WebRequest.Create(url);
-            // If required by the server, set the credentials.
-            request.Credentials = CredentialCache.DefaultCredentials;
-            // Get the response.
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            /* DESCRIPCIÓN:
+             *   - Primer encuentro: < div class="bbmx-product-description">
+             *   - Inicio de descripción: <!-- react-text: 4 -->
+             *   - Final de descripción: <!-- /react-text -->
+             * NÚMERO DE REVIEWS: 
+             *   - Inicio: "reviewCount":
+             *   - Final: ,
+             * RATING(CALIFICACIÓN) PROMEDIO:
+             *   - INICIO: "averageOverallRating":
+             *   - FIN: ,
+             **/
 
-            /* - AQUÍ ESTABLECERÍAMOS LOS HEADER Y ESO DE SER NECESARIO.*/
-
-            // Display the status.
-            // Aquí escribimos el estado en la consola.
-            //Console.WriteLine(response.StatusDescription);
-
-            // Get the stream containing content returned by the server.
-            // Aquí se guarda un archivo en memoria con la información obtenida en el response.
-            Stream dataStream = response.GetResponseStream();
-
-            // Open the stream using a StreamReader for easy access.
-            // Con este lector podemos iterar en el archivo.
-            StreamReader reader = new StreamReader(dataStream);
-
-            // Read the content.
-            // Guardamos el texto del archivo guardado en memoria para luego mostrarlo.
-            string responseFromServer = reader.ReadToEnd();
-
-            // Display the content.
-            //Console.WriteLine(responseFromServer);
-
-            // Cleanup the streams and the response.
-            reader.Close();
-            dataStream.Close();
-            response.Close();
         }
         /* Método para mostrar la información del producto
          *  en un cuadro de texto.**/
         public void ShowDetails(Label info)
         {
+            /* Reiniciamos el texto de la etiqueta por si tenía
+             *  algo escrito.**/
+            info.Text = "";
             /* Mandar la información al cuadro de texto. **/
             info.Text += " - NOMBRE DEL PRODUCTO: " + name;
             // Si sí tiene detalles del modelo el producto.
@@ -127,7 +210,6 @@ namespace _T3._1__WebRequest_con_BestBuy
              *  en la cadena del Label de los detalles.**/
             AppendCharacteristics(info);
             AppendReviews(info);
-
         }
         /* Método para agregar las características del producto
          *  a la cadena del cuadro de texto. Esto para no mandarle

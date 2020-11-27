@@ -35,6 +35,8 @@ namespace _T3._1__WebRequest_con_BestBuy
          * Inicializar aquí porque no tenemos constructor de Query,
          *  y en Query siempre se limpiará si tiene elementos.**/
         private static List<Product> productList = new List<Product>();
+        /* Getter de la lista de productos para poder acceder a estos.**/
+        public static List<Product> ProductList { get { return productList; }}
         /* Variables estáticas que podrán ser accedidas en
          *  todos los métodos.**/
         private static string baseURL, query, sortBy;
@@ -138,11 +140,11 @@ namespace _T3._1__WebRequest_con_BestBuy
         }
         /* Método que hará el webRequest y regresará la URI
          *  obtenida junto con el código fuente de la página.**/
-        private static Uri MakeWebRequest(string currentPageURL, ref string webpageSourceCode)
+        private static Uri MakeWebRequest(string URL, ref string webpageSourceCode)
         {
             // Create a request for the URL. 		
             //WebRequest request = WebRequest.Create("AQUÍ VA LA URL");
-            WebRequest request = WebRequest.Create(currentPageURL);
+            WebRequest request = WebRequest.Create(URL);
             // If required by the server, set the credentials.
             request.Credentials = CredentialCache.DefaultCredentials;
 
@@ -298,6 +300,48 @@ namespace _T3._1__WebRequest_con_BestBuy
                     + currentPageURL.Substring(pageNumberIndex + 1, currentPageURL.Length - pageNumberIndex - 1);
             }
         }
+        /* Método en donde se hará un WebRequest pero se pasarán como parámetros
+         *  tanto el delimitador inicial como el delimitador final, y todo lo
+         *  demás. Esto permite una búsqueda más personalizada.**/
+        public static string GetElementFromWebPage(ref string substrInCurrIndex,
+                                                   string initialDelimiter, string finalDelimiter,
+                                                   ref int currentIndex, ref int lastIndex)
+        {
+            /* The found element string.**/
+            string element;
+            /* Todos los delimitadores tienen la estructura siguiente:
+             *      \"categoría\":\"
+             * Por eso lo puse así abajo.
+             * De esta forma solo mandamos la categoría no incluyendo
+             *  las diagonales y eso.
+             * **/
+            substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
+            /* DELIMITADOR DEL PRODUCTO: initialDelimiter **/
+            currentIndex = substrInCurrIndex.IndexOf(initialDelimiter) + initialDelimiter.Length;
+            /* Aquí tenemos la cadena del índice en donde comienza el título del producto
+             *  hasta el final de todo el código fuente.**/
+            substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
+            /* Ahora hay que obtener el nombre del producto.
+             * Buscamos el índice del delimitador final para poder
+             *  guardar el nombre del elemento buscado.
+             * Esto indica el final de la cadena con el elemento que buscamos.**/
+            lastIndex = substrInCurrIndex.IndexOf(finalDelimiter);
+            /* Ahora obtener el nombre desde el índice actual hasta el último.
+             * Como la nueva subcadena ya comienza desde el índice actual entonces
+             *  el primer parámetro de la subcadena será 0.
+             *  - Esto quiere decir que la cadena empieza desde el inicio
+             *  del nombre del producto hasta su fin.**/
+            element = substrInCurrIndex.Substring(0, lastIndex);
+            /* Ahora hacemos que la subcadena comience del último caracter
+             *  del nombre del producto para buscar desde ahí.**/
+            substrInCurrIndex.Substring(lastIndex, substrInCurrIndex.Length - lastIndex);
+            /* Indicamos que el índice actual  el último encontrado son 0, ya que
+             *  acabamos de crear una nueva subcadena.**/
+            currentIndex = lastIndex = 0;
+
+            /* Regresar la cadena con el elemento encontrado.**/
+            return element;
+        }
 
         /* Método que obtendrá la información de un elemento
          *  que estará delimitado por una cadena inicial y una final.
@@ -313,7 +357,13 @@ namespace _T3._1__WebRequest_con_BestBuy
         {
             /* The found element string.**/
             string element;
-
+            /* Todos los delimitadores tienen la estructura siguiente:
+             *      \"categoría\":\"
+             * Por eso lo puse así abajo.
+             * De esta forma solo mandamos la categoría no incluyendo
+             *  las diagonales y eso.
+             * **/
+            initialDelimiter = "\\\"" + initialDelimiter + "\\\":\\\"";
             substrInCurrIndex = substrInCurrIndex.Substring(currentIndex, substrInCurrIndex.Length - currentIndex);
             /* DELIMITADOR DEL PRODUCTO: initialDelimiter **/
             currentIndex = substrInCurrIndex.IndexOf(initialDelimiter) + initialDelimiter.Length;
@@ -345,7 +395,23 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  actual del sitio web y los guarda en la lista de
          *  productos.
          * Hay que recordar que la lista de productos es estática y
-         *  accesible desde cualquier parte del código actual.**/
+         *  accesible desde cualquier parte del código actual.
+         *  
+         *  LOS QUE PODEMOS OBTENER DESDE AQUÍ SON LOS SIGUIENTES:
+         *  - IDENTIFICADORES PARA CADA ATRIBUTO EN ORDEN:
+         *      * Name: title
+         *      * SKU: skuId
+         *      * Item type: itemType
+         *      * Item category: itemCategory
+         *      * Model number: modelNumber
+         *      * Publisher: publisher
+         *      * Release date: releaseDate
+         *      * Price: customerPrice
+         *      * Regular price: regularPrice
+         *      * Imagen (en .jpg, por si la quisiera mostrar): imageURL
+         *      * URL: seoPdpUrl
+         *      * Brand: brand
+         * **/
         private static void GetAllElementsFromCurrentPageNumber(string webpageSourceCode)
         {
             /* Declaramos el índice inicial y final con los que se manejarán
@@ -365,7 +431,7 @@ namespace _T3._1__WebRequest_con_BestBuy
              * - productName: El nombre de cada producto.
              * - substrInCurrIndex: Subcadena que irá del índice actual al último índice de la cadena
              *  que contiene todo el código fuente del sitio web. Irá cambiando cada que cambie el índice.**/
-            string productName, productURL, substrInCurrIndex;
+            string substrInCurrIndex, productName, productURL, ;
 
             /* Buscar el índice inicial en donde comienza toda la información.
              * La información comienza con la cadena de texto: "window.INITIAL_PAGE_STATE".**/
@@ -394,9 +460,9 @@ namespace _T3._1__WebRequest_con_BestBuy
                     *  https://stackoverflow.com/questions/1768023/how-to-use-in-a-string-without-making-it-an-escape-sequence-c
                     * **/
                 /* Obtenemos el nombre del producto.**/
-                productName = GetElementFromWebPage(ref substrInCurrIndex, @"\""title\"":\""", ref currentIndex, ref lastIndex);
+                productName = GetElementFromWebPage(ref substrInCurrIndex, "title", ref currentIndex, ref lastIndex);
                 /* Obtenemos el URL del producto.**/    
-                productURL = GetElementFromWebPage(ref substrInCurrIndex, @"\""seoPdpUrl\"":\""", ref currentIndex, ref lastIndex);
+                productURL = GetElementFromWebPage(ref substrInCurrIndex, "seoPdpUrl", ref currentIndex, ref lastIndex);
                     
                 /* Si llegó hasta aquí significa que no ha pasado la última
                     *  página y podemos instanciar un elemento de producto.**/

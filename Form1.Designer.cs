@@ -64,7 +64,7 @@
             this.label_InformationOfProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label_InformationOfProject.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_InformationOfProject.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label_InformationOfProject.Location = new System.Drawing.Point(30, 460);
+            this.label_InformationOfProject.Location = new System.Drawing.Point(32, 460);
             this.label_InformationOfProject.Name = "label_InformationOfProject";
             this.label_InformationOfProject.Size = new System.Drawing.Size(390, 92);
             this.label_InformationOfProject.TabIndex = 100;
@@ -168,6 +168,7 @@
             this.label_ProductInformation.TabIndex = 4;
             this.label_ProductInformation.Tag = "Information";
             this.label_ProductInformation.Text = "Información del producto.";
+            this.label_ProductInformation.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox_Products_Click);
             // 
             // label_Products
             // 

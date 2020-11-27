@@ -96,5 +96,16 @@ namespace _T3._1__WebRequest_con_BestBuy
             if (e.KeyCode == Keys.Enter)
                 button_WebSearch_Click(sender, e);
         }
+        /* Método que se ejecutará al dar un doble click con el mouse
+         *  a un elemento de la lista de productos, o cuando se presione
+         *  "enter" en un elemento seleccionado.**/
+        private void listBox_Products_Click(object sender, MouseEventArgs e)
+        {
+            /* Hay que ver si la lista tiene elementos o no.**/
+            if(listBox_Products.Items.Count > 0)
+                /* De esta forma accedemos al producto del índice seleccionado
+                 *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
+                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(label_ProductInformation);
+        }
     }
 }
