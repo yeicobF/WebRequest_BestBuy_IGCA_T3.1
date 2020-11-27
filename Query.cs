@@ -302,7 +302,8 @@ namespace _T3._1__WebRequest_con_BestBuy
         }
         /* Método en donde se hará un WebRequest pero se pasarán como parámetros
          *  tanto el delimitador inicial como el delimitador final, y todo lo
-         *  demás. Esto permite una búsqueda más personalizada.**/
+         *  demás. Esto permite una búsqueda más personalizada.
+         *  **/
         public static string GetElementFromWebPage(ref string substrInCurrIndex,
                                                    string initialDelimiter, string finalDelimiter,
                                                    ref int currentIndex, ref int lastIndex)
@@ -411,6 +412,10 @@ namespace _T3._1__WebRequest_con_BestBuy
          *      * Imagen (en .jpg, por si la quisiera mostrar): imageURL
          *      * URL: seoPdpUrl
          *      * Brand: brand
+         * 
+         * public Product(string name, string sku, string itemType, string itemCategory,
+                       string modelNumber, string publisher, string releaseDate,
+                       string customerPrice, string regularPrice, string url, string brand)
          * **/
         private static void GetAllElementsFromCurrentPageNumber(string webpageSourceCode)
         {
@@ -431,7 +436,8 @@ namespace _T3._1__WebRequest_con_BestBuy
              * - productName: El nombre de cada producto.
              * - substrInCurrIndex: Subcadena que irá del índice actual al último índice de la cadena
              *  que contiene todo el código fuente del sitio web. Irá cambiando cada que cambie el índice.**/
-            string substrInCurrIndex, productName, productURL, ;
+            string substrInCurrIndex, name, sku, itemType, itemCategory, modelNumber,
+                   publisher, releaseDate, customerPrice, regularPrice, url, brand;
 
             /* Buscar el índice inicial en donde comienza toda la información.
              * La información comienza con la cadena de texto: "window.INITIAL_PAGE_STATE".**/
@@ -450,25 +456,39 @@ namespace _T3._1__WebRequest_con_BestBuy
             {
                 /* Inicializamos en 0 los índices, ya que es el primer índice de la subcadena actual.**/
                 lastIndex = currentIndex = 0;
-                /* -> Se pone el @ para no utilizar secuencias de escape,
-                    * pero para las comillas no funciona, por lo que se tienen
-                    * que poner unas comillas más para que cuenten. Por ejemplo,
-                    * si queremos poner [ " hola " ] (sin contar los corchetes),
-                    * tendremos que poner [ "" hola ""].
-                    * 
-                    * FUENTE: [StackOverflow] How to use “\” in a string without making it an escape sequence - C#?
-                    *  https://stackoverflow.com/questions/1768023/how-to-use-in-a-string-without-making-it-an-escape-sequence-c
-                    * **/
+                /* ORDEN PARA OBTENER INFORMACIÓN:
+                 * * Name: title
+                 * * SKU: skuId
+                 * * Item type: itemType
+                 * * Item category: itemCategory
+                 * * Model number: modelNumber
+                 * * Publisher: publisher
+                 * * Release date: releaseDate
+                 * * Price: customerPrice
+                 * * Regular price: regularPrice
+                 * * Imagen (en .jpg, por si la quisiera mostrar): imageURL
+                 * * URL: seoPdpUrl
+                 * * Brand: brand
+                 * **/
                 /* Obtenemos el nombre del producto.**/
-                productName = GetElementFromWebPage(ref substrInCurrIndex, "title", ref currentIndex, ref lastIndex);
+                name = GetElementFromWebPage(ref substrInCurrIndex, "title", ref currentIndex, ref lastIndex);
+                sku = GetElementFromWebPage(ref substrInCurrIndex, "skuId", ref currentIndex, ref lastIndex);
+                itemType = GetElementFromWebPage(ref substrInCurrIndex, "itemType", ref currentIndex, ref lastIndex);
+                itemCategory = GetElementFromWebPage(ref substrInCurrIndex, "itemCategory", ref currentIndex, ref lastIndex);
+                modelNumber = GetElementFromWebPage(ref substrInCurrIndex, "modelNumber", ref currentIndex, ref lastIndex);
+                publisher = GetElementFromWebPage(ref substrInCurrIndex, "publisher", ref currentIndex, ref lastIndex);
+                releaseDate = GetElementFromWebPage(ref substrInCurrIndex, "releaseDate", ref currentIndex, ref lastIndex);
+                customerPrice = GetElementFromWebPage(ref substrInCurrIndex, "customerPrice", ref currentIndex, ref lastIndex);
+                regularPrice = GetElementFromWebPage(ref substrInCurrIndex, "regularPrice", ref currentIndex, ref lastIndex);
                 /* Obtenemos el URL del producto.**/    
-                productURL = GetElementFromWebPage(ref substrInCurrIndex, "seoPdpUrl", ref currentIndex, ref lastIndex);
-                    
+                url = GetElementFromWebPage(ref substrInCurrIndex, "seoPdpUrl", ref currentIndex, ref lastIndex);
+                brand = GetElementFromWebPage(ref substrInCurrIndex, "brand", ref currentIndex, ref lastIndex);
+
                 /* Si llegó hasta aquí significa que no ha pasado la última
                     *  página y podemos instanciar un elemento de producto.**/
-                productList.Add(new Product(productName, productURL));
+                productList.Add(new Product(name, sku, itemType, itemCategory, modelNumber, publisher, releaseDate, customerPrice, regularPrice, url, brand));
                 /* Imprimir para ver si los objetos se crearon correctamente.**/
-                Console.WriteLine("\n\n - PRODUCTO CREADO: Nombre: " + productList.ElementAt(productList.Count - 1).Name + ", URL: " + productList.ElementAt(productList.Count - 1).URL);
+                productList.ElementAt(productList.Count - 1).PrintDetails();
             }
         }
         /* Método que revisa si el elemento deseado se encuentra en el

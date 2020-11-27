@@ -88,17 +88,22 @@ namespace _T3._1__WebRequest_con_BestBuy
          * * Imagen (en .jpg, por si la quisiera mostrar): imageURL
          * * URL: seoPdpUrl
          * * Brand: brand**/
-        public Product(string name, string url)
+        public Product(string name, string sku, string itemType, string itemCategory,
+                       string modelNumber, string publisher, string releaseDate,
+                       string customerPrice, string regularPrice, string url, string brand)
         {
             this.name = name;
+            this.sku = sku;
+            this.itemType = itemType;
+            this.itemCategory = itemCategory;
+            this.modelNumber = modelNumber;
+            this.publisher = publisher;
+            this.releaseDate = releaseDate;
+            this.customerPrice = customerPrice;
+            this.regularPrice = regularPrice;
             this.url = url;
-            /* Inicialización de las listas de cadenas. **/
-            // characteristics = new List<string>();
-            // reviews = new List<string>(5); // Lista de 5 características.
-            /* Inicialización de las cadenas. Necesario en el caso de las variables
-             *  en donde no se muestran algunos detalles. Servirá para evaluar si la
-             *  cadena está vacía no mostrar la info. **/
-            model = publisher = sku = price = rating = releaseDate = description = "";
+            this.brand = brand;
+            description = reviewCount = averageOverallRating = "";
         }
         /* Método para probar si las Label se modifican en pantalla
          *  aunque no se pasen por referencia. **/
@@ -185,7 +190,12 @@ namespace _T3._1__WebRequest_con_BestBuy
 
         }
         /* Método para mostrar la información del producto
-         *  en un cuadro de texto.**/
+         *  en un cuadro de texto.
+         *  
+         * Información a mostrar:
+         *  name, sku, itemType, itemCategory, modelNumber, publisher, releaseDate,
+                customerPrice, regularPrice, url, brand, description, reviewCount,
+                averageOverallRating**/
         public void ShowDetails(Label info)
         {
             /* Reiniciamos el texto de la etiqueta por si tenía
@@ -194,22 +204,27 @@ namespace _T3._1__WebRequest_con_BestBuy
             /* Mandar la información al cuadro de texto. **/
             info.Text += " - NOMBRE DEL PRODUCTO: " + name;
             // Si sí tiene detalles del modelo el producto.
-            if (!model.Equals(""))
-               info.Text += "\n - MODELO: " + model;
+            if (!modelNumber.Equals(""))
+               info.Text += "\n - NÚMERO DE MODELO: " + modelNumber;
             // Si sí tiene detalles del publisher el producto.
             if (!publisher.Equals(""))
                 info.Text += "\n - PUBLISHER: " + publisher;
             info.Text += "\n - SKU: " + sku;
-            info.Text += "\n - PRECIO" + price;
-            info.Text += "\n - CALIFICACIÓN: " + rating;
+            info.Text += "\n - PRECIO" + customerPrice;
+            info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
+            info.Text += "\n - CATEGORÍA: " + itemCategory;
             // Si el producto sí tiene fecha de lanzamiento.
             if(!releaseDate.Equals(""))
                 info.Text += "\n - FECHA DE LANZAMIENTO: " + releaseDate;
+            info.Text += "\n - MARCA: " + brand;
+            info.Text += "\n - URL: " + url;
+            info.Text += "\n\n - NÚMERO DE RESEÑAS: " + reviewCount;
+            info.Text += "\n - CALIFICACIÓN: " + averageOverallRating;
             info.Text += "\n - DESCRIPCIÓN: " + description;
             /* Agregamos las características y reviews que están en listas
              *  en la cadena del Label de los detalles.**/
-            AppendCharacteristics(info);
-            AppendReviews(info);
+            //AppendCharacteristics(info);
+            //AppendReviews(info);
         }
         /* Método para agregar las características del producto
          *  a la cadena del cuadro de texto. Esto para no mandarle
@@ -218,33 +233,33 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  - ACTUALIZACIÓN: Vi que se puede pasar la Label aunque
          *  no sea por referencia y se va a actualizar. Aunque sea
          *  redundante es menos rollo.**/
-        private void AppendCharacteristics(Label label)
-        {
-            label.Text += "\n\n - CARACTERÍSTICAS: ";
-            /* Agregamos las características a la cadena. **/
-            label.Text += GetBulletsOfList(characteristics);
-        }
+        //private void AppendCharacteristics(Label label)
+        //{
+        //    label.Text += "\n\n - CARACTERÍSTICAS: ";
+        //    /* Agregamos las características a la cadena. **/
+        //    label.Text += GetBulletsOfList(characteristics);
+        //}
         /* Método para concatenar las reviews del producto
          *  a la cadena del cuadro de texto. Esto además de para
          *  no ser redundante y mandar "label" como parámetro,
          *  ser más conciso tomando en cuenta de que solo
          *  requerimos este proceso para agregarlo al cuadro
          *  de texto.**/
-        private void AppendReviews(Label label)
-        {
-            label.Text = "\n\n - RESEÑAS DEL PRODUCTO: ";
-            /* Agregamos las reviews a la cadena. **/
-            label.Text += GetBulletsOfList(reviews);
+        //private void AppendReviews(Label label)
+        //{
+        //    label.Text = "\n\n - RESEÑAS DEL PRODUCTO: ";
+        //    /* Agregamos las reviews a la cadena. **/
+        //    label.Text += GetBulletsOfList(reviews);
 
-            /* No se puede poner un contador y lo necesito para el número
-             *  de elemento. Mejor opto por la otra opción. **/
-            //foreach (string review in reviews)
-            //{
-            //    /* Aquí concatenamos cada característica en una línea nueva
-            //     *  indicando el número de elemento. **/
-            //    reviewsString += ("\n  {0}.- {1}", review, characteristics.ElementAt(i));
-            //}
-        }
+        //    /* No se puede poner un contador y lo necesito para el número
+        //     *  de elemento. Mejor opto por la otra opción. **/
+        //    //foreach (string review in reviews)
+        //    //{
+        //    //    /* Aquí concatenamos cada característica en una línea nueva
+        //    //     *  indicando el número de elemento. **/
+        //    //    reviewsString += ("\n  {0}.- {1}", review, characteristics.ElementAt(i));
+        //    //}
+        //}
         /* Método para obtener los puntos de una lista
          *  enumerados.**/
         private string GetBulletsOfList(List<string> elementsList)
@@ -257,6 +272,14 @@ namespace _T3._1__WebRequest_con_BestBuy
                 bulletList += ("\n  {0}.- {1}", i, elementsList.ElementAt(i));
 
             return bulletList;
+        }
+        /* Método que imprimirá los detalles del producto.**/
+        public void PrintDetails()
+        {
+            Console.WriteLine("\n\n - Nombre: {0}, SKU: {1}, itemType: {2}, itemCategory: {3}," +
+                "\nmodelNumber: {4}, publisher: {5}, releaseDate: {6}, customerPrice: {7}," +
+                "\nregularPrice: {8}, url: {9}, brand: {10}", name, sku, itemType, itemCategory, 
+                    modelNumber, publisher, releaseDate, customerPrice, regularPrice, url, brand);
         }
     }
 }
