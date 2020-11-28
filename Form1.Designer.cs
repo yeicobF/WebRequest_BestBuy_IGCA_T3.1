@@ -39,11 +39,11 @@
             this.label_Products = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.searchErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.textBox_ProductDetails = new System.Windows.Forms.TextBox();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button_Reset = new System.Windows.Forms.Button();
             this.button_Exit = new System.Windows.Forms.Button();
             this.label_NumberOfFoundElements = new System.Windows.Forms.Label();
+            this.button_SaveProductDetailsInFile = new System.Windows.Forms.Button();
+            this.richTextBox_ProductDetails = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.searchErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,7 +135,7 @@
             this.button_WebSearch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.button_WebSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button_WebSearch.Font = new System.Drawing.Font("Malgun Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_WebSearch.Location = new System.Drawing.Point(722, 15);
+            this.button_WebSearch.Location = new System.Drawing.Point(722, 16);
             this.button_WebSearch.Margin = new System.Windows.Forms.Padding(0);
             this.button_WebSearch.Name = "button_WebSearch";
             this.button_WebSearch.Size = new System.Drawing.Size(64, 29);
@@ -191,32 +191,6 @@
             this.searchErrorProvider.BlinkRate = 200;
             this.searchErrorProvider.ContainerControl = this;
             this.searchErrorProvider.Tag = "Errors";
-            // 
-            // textBox_ProductDetails
-            // 
-            this.textBox_ProductDetails.BackColor = System.Drawing.SystemColors.Window;
-            this.textBox_ProductDetails.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox_ProductDetails.Location = new System.Drawing.Point(456, 94);
-            this.textBox_ProductDetails.Multiline = true;
-            this.textBox_ProductDetails.Name = "textBox_ProductDetails";
-            this.textBox_ProductDetails.ReadOnly = true;
-            this.textBox_ProductDetails.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_ProductDetails.Size = new System.Drawing.Size(330, 417);
-            this.textBox_ProductDetails.TabIndex = 105;
-            this.textBox_ProductDetails.Tag = "Information";
-            this.textBox_ProductDetails.Text = "Descripción del producto seleccionado.";
-            this.textBox_ProductDetails.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(502, 317);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(239, 13);
-            this.linkLabel1.TabIndex = 106;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Aquí podría ir el URL del producto seleccionado.";
-            this.linkLabel1.Visible = false;
             // 
             // button_Reset
             // 
@@ -278,16 +252,53 @@
     ": --\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: --";
             this.label_NumberOfFoundElements.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // button_SaveProductDetailsInFile
+            // 
+            this.button_SaveProductDetailsInFile.AutoSize = true;
+            this.button_SaveProductDetailsInFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button_SaveProductDetailsInFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button_SaveProductDetailsInFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.button_SaveProductDetailsInFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button_SaveProductDetailsInFile.FlatAppearance.BorderColor = System.Drawing.Color.Gold;
+            this.button_SaveProductDetailsInFile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Crimson;
+            this.button_SaveProductDetailsInFile.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Red;
+            this.button_SaveProductDetailsInFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_SaveProductDetailsInFile.Font = new System.Drawing.Font("Malgun Gothic", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_SaveProductDetailsInFile.ForeColor = System.Drawing.Color.White;
+            this.button_SaveProductDetailsInFile.Location = new System.Drawing.Point(581, 518);
+            this.button_SaveProductDetailsInFile.Margin = new System.Windows.Forms.Padding(0);
+            this.button_SaveProductDetailsInFile.Name = "button_SaveProductDetailsInFile";
+            this.button_SaveProductDetailsInFile.Size = new System.Drawing.Size(146, 38);
+            this.button_SaveProductDetailsInFile.TabIndex = 112;
+            this.button_SaveProductDetailsInFile.Tag = "Query";
+            this.button_SaveProductDetailsInFile.Text = "Guardar información\r\ndel producto en archivo";
+            this.button_SaveProductDetailsInFile.UseVisualStyleBackColor = false;
+            // 
+            // richTextBox_ProductDetails
+            // 
+            this.richTextBox_ProductDetails.BackColor = System.Drawing.SystemColors.Window;
+            this.richTextBox_ProductDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextBox_ProductDetails.BulletIndent = 1;
+            this.richTextBox_ProductDetails.Font = new System.Drawing.Font("Microsoft Tai Le", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox_ProductDetails.HideSelection = false;
+            this.richTextBox_ProductDetails.Location = new System.Drawing.Point(456, 94);
+            this.richTextBox_ProductDetails.Name = "richTextBox_ProductDetails";
+            this.richTextBox_ProductDetails.ReadOnly = true;
+            this.richTextBox_ProductDetails.Size = new System.Drawing.Size(330, 417);
+            this.richTextBox_ProductDetails.TabIndex = 113;
+            this.richTextBox_ProductDetails.Tag = "Information";
+            this.richTextBox_ProductDetails.Text = "Descripción del producto seleccionado.";
+            // 
             // SearchWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FloralWhite;
             this.ClientSize = new System.Drawing.Size(804, 561);
+            this.Controls.Add(this.button_SaveProductDetailsInFile);
             this.Controls.Add(this.label_NumberOfFoundElements);
             this.Controls.Add(this.button_Exit);
             this.Controls.Add(this.button_Reset);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label_Products);
             this.Controls.Add(this.listBox_Products);
@@ -297,7 +308,7 @@
             this.Controls.Add(this.label_WebQuery);
             this.Controls.Add(this.label_InformationOfProject);
             this.Controls.Add(this.textBox_WebQuery);
-            this.Controls.Add(this.textBox_ProductDetails);
+            this.Controls.Add(this.richTextBox_ProductDetails);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(900, 600);
             this.Name = "SearchWindow";
@@ -325,11 +336,11 @@
         private System.Windows.Forms.Label label_Products;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ErrorProvider searchErrorProvider;
-        private System.Windows.Forms.TextBox textBox_ProductDetails;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Button button_Reset;
         private System.Windows.Forms.Button button_Exit;
         private System.Windows.Forms.Label label_NumberOfFoundElements;
+        private System.Windows.Forms.Button button_SaveProductDetailsInFile;
+        private System.Windows.Forms.RichTextBox richTextBox_ProductDetails;
     }
 }
 

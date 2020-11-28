@@ -213,7 +213,7 @@ namespace _T3._1__WebRequest_con_BestBuy
          *  name, sku, itemType, itemCategory, modelNumber, publisher, releaseDate,
                 customerPrice, regularPrice, url, brand, description, reviewCount,
                 averageOverallRating**/
-        public void ShowDetails(TextBox info)
+        public void ShowDetails(RichTextBox info)
         {
             /* Antes de mostrar los detalles hay que obtener
              *  los que faltan:**/

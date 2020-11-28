@@ -110,7 +110,7 @@ namespace _T3._1__WebRequest_con_BestBuy
             if(listBox_Products.Items.Count > 0)
                 /* De esta forma accedemos al producto del índice seleccionado
                  *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
-                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(textBox_ProductDetails);
+                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(richTextBox_ProductDetails);
         }
 
         private void listBox_Products_KeyDown(object sender, KeyEventArgs e)
@@ -120,7 +120,7 @@ namespace _T3._1__WebRequest_con_BestBuy
             if (listBox_Products.Items.Count > 0 && listBox_Products.SelectedIndex >= 0 && e.KeyCode == Keys.Enter)
                 /* De esta forma accedemos al producto del índice seleccionado
                  *  y llamamos a su método ShowDetails para que muestre sus detalles.**/
-                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(textBox_ProductDetails);
+                Query.ProductList.ElementAt(listBox_Products.SelectedIndex).ShowDetails(richTextBox_ProductDetails);
         }
         /* Método que al presionar el botón que indica el reinicio de todo,
          *  pondrá todos los elementos como al inicio:
@@ -138,7 +138,7 @@ namespace _T3._1__WebRequest_con_BestBuy
             /* Borrar la lista de los productos. **/
             listBox_Products.Items.Clear();
             /* Borrar los detalles de productos sí es que hay y poner el texto predeterminado.**/
-            textBox_ProductDetails.Text = "Descripción del producto seleccionado.";
+            richTextBox_ProductDetails.Text = "Descripción del producto seleccionado.";
             /* Borar el número de elementos encontrados y poner como está al incio.**/
             label_NumberOfFoundElements.Text = "NÚMERO TOTAL DE PRODUCTOS ENCONTRADOS: --";
             label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: --";
