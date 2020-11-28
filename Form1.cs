@@ -193,5 +193,12 @@ namespace _T3._1__WebRequest_con_BestBuy
                 FileManager.SaveAs(Query.ProductList.ElementAt(listBox_Products.SelectedIndex).Name,
                                  richTextBox_ProductDetails.Text);
         }
+        /* Si se le da click al URL de la descripción del producto, nos lleva
+         *  al sitio web.**/
+        private void richTextBox_ProductDetails_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            /* Abre el enlace en el navegador predeterminado. **/
+            System.Diagnostics.Process.Start(e.LinkText);
+        }
     }
 }

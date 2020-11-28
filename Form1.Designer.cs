@@ -209,8 +209,8 @@
             this.button_Reset.Margin = new System.Windows.Forms.Padding(0);
             this.button_Reset.Name = "button_Reset";
             this.button_Reset.Size = new System.Drawing.Size(117, 31);
-            this.button_Reset.TabIndex = 109;
-            this.button_Reset.Tag = "Query";
+            this.button_Reset.TabIndex = 5;
+            this.button_Reset.Tag = "";
             this.button_Reset.Text = "Reiniciar todo";
             this.button_Reset.UseVisualStyleBackColor = false;
             this.button_Reset.Click += new System.EventHandler(this.button_Reset_Click);
@@ -232,8 +232,8 @@
             this.button_Exit.Margin = new System.Windows.Forms.Padding(0);
             this.button_Exit.Name = "button_Exit";
             this.button_Exit.Size = new System.Drawing.Size(51, 31);
-            this.button_Exit.TabIndex = 110;
-            this.button_Exit.Tag = "Query";
+            this.button_Exit.TabIndex = 7;
+            this.button_Exit.Tag = "";
             this.button_Exit.Text = "Salir";
             this.button_Exit.UseVisualStyleBackColor = false;
             this.button_Exit.Click += new System.EventHandler(this.button_Exit_Click);
@@ -269,8 +269,8 @@
             this.button_SaveProductDetailsInFile.Margin = new System.Windows.Forms.Padding(0);
             this.button_SaveProductDetailsInFile.Name = "button_SaveProductDetailsInFile";
             this.button_SaveProductDetailsInFile.Size = new System.Drawing.Size(146, 38);
-            this.button_SaveProductDetailsInFile.TabIndex = 112;
-            this.button_SaveProductDetailsInFile.Tag = "Query";
+            this.button_SaveProductDetailsInFile.TabIndex = 6;
+            this.button_SaveProductDetailsInFile.Tag = "File";
             this.button_SaveProductDetailsInFile.Text = "Guardar información\r\ndel producto en archivo";
             this.button_SaveProductDetailsInFile.UseVisualStyleBackColor = false;
             this.button_SaveProductDetailsInFile.Click += new System.EventHandler(this.button_SaveProductDetailsInFile_Click);
@@ -286,13 +286,15 @@
             this.richTextBox_ProductDetails.Name = "richTextBox_ProductDetails";
             this.richTextBox_ProductDetails.ReadOnly = true;
             this.richTextBox_ProductDetails.Size = new System.Drawing.Size(330, 417);
-            this.richTextBox_ProductDetails.TabIndex = 113;
+            this.richTextBox_ProductDetails.TabIndex = 4;
             this.richTextBox_ProductDetails.Tag = "Information";
 
+            /* Hacer que el texto se centre.**/
             this.richTextBox_ProductDetails.SelectAll();
             this.richTextBox_ProductDetails.SelectionAlignment = System.Windows.Forms.HorizontalAlignment.Center;
 
             this.richTextBox_ProductDetails.Text = "Descripción del producto seleccionado.";
+            this.richTextBox_ProductDetails.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBox_ProductDetails_LinkClicked);
             // 
             // SearchWindow
             // 
