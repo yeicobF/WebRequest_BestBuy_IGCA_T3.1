@@ -175,5 +175,23 @@ namespace _T3._1__WebRequest_con_BestBuy
             label_NumberOfFoundElements.Text += "\r\nNÚMERO TOTAL DE PÁGINAS DE LA BÚSQUEDA: " + numberOfFoundWebPages;
             label_NumberOfFoundElements.Text += "\r\n-> NÚMERO DE PRODUCTO SELECCIONADO: " + currentSelectedElement;
         }
+        /* Método que guardará en un archivo de texto los detalles
+         * del producto que se está mostrando. **/
+        private void button_SaveProductDetailsInFile_Click(object sender, EventArgs e)
+        {
+            /* Si la caja de descripción del producto no está vacía o tiene
+             *  el texto inicial.
+             *  
+             *  !richTextBox_ProductDetails.Equals("") && 
+             *  **/
+            if (!richTextBox_ProductDetails.Text.Equals("Descripción del producto seleccionado.")
+                /* Además debe haber al menos un producto.**/
+                && listBox_Products.Items.Count > 0 && listBox_Products.SelectedIndex >= 0)
+                /* Intentará guardar el archivo. Dentro de este método muestra la ventana
+                 *  emergente de GuardarComo si no estaba guardado, pero si ya lo estaba solo
+                 *  lo sobreescribe.**/
+                FileManager.SaveAs(Query.ProductList.ElementAt(listBox_Products.SelectedIndex).Name,
+                                 richTextBox_ProductDetails.Text);
+        }
     }
 }

@@ -73,6 +73,14 @@ namespace _T3._1__WebRequest_con_BestBuy
         }
         /* Lo mismo que arriba pero en una línea.**/
         public string URL { get { return url; } }
+        /* Getter de descripción del producto, ya que será
+         *  requerido su acceso cuando se guarde en un archivo.
+         *  
+         * - ACTUALIZACIÓN: No requiero guardar la descripción,
+         * sino el texto de TODA LA INFORMACIÓN DEL PRODUCTO.
+         *  Esto se hace obteniendo el texto de la
+         *      RichTextBox en donde se está mostrando.**/
+        public string Description { get { return description; } }
         /* PARÁMETROS PARA EL CONSTRUCTOR, ya que se pueden
          * conseguir desde la búsqueda general.
          * 

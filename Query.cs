@@ -18,6 +18,24 @@ using System.IO;
  *    Solo se ocupará su método de búsqueda, pero la información
  *      será guardada en la clase Product, de la cual se manejará
  *      un arreglo estático para que sea global.
+ *  - EXPLICACIÓN CLASES ABSTRACTAS Y ESTÁTICAS:
+ *      Here is a short summary:
+
+    A static class can only contain static members (it is just a container
+    for methods that do not logically belong to an instance of any standard class)
+    An abstract class can contain all usual kinds of members (static, abstract and also instance)
+    The key difference is that you can inherit from an abstract class,
+    but you cannot inherit from a static class. Technically speaking,
+    the .NET runtime doesn't have any notion of static classes, so the C# compiler
+    compiles them as classes that are both abstract and sealed (meaning that you cannot inherit from them).
+
+    So, static classes are abstract classes that are also sealed (although this
+    is not the usual way to look at the problem if you are C# programmer) and
+    contain only static members (which is enforced by the C# compiler).
+
+    - FUENTE: [StackOverflow] What's the difference between an abstract class and a static one?
+    https://stackoverflow.com/questions/2390767/whats-the-difference-between-an-abstract-class-and-a-static-one#:~:text=Abstract%20classes%20get%20instantiated%20indirectly,provided%20by%20derived%20concrete%20classes.&text=Static%20classes%20cannot%20be%20instantiated,rather%20than%20the%20instance%20level.
+
  *      
  * - Viernes, 27/NOV [04:22AM] quité comentarios y código innecesario,
  * y separé el código en métodos para que quedara más ordenado.

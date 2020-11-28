@@ -273,6 +273,7 @@
             this.button_SaveProductDetailsInFile.Tag = "Query";
             this.button_SaveProductDetailsInFile.Text = "Guardar información\r\ndel producto en archivo";
             this.button_SaveProductDetailsInFile.UseVisualStyleBackColor = false;
+            this.button_SaveProductDetailsInFile.Click += new System.EventHandler(this.button_SaveProductDetailsInFile_Click);
             // 
             // richTextBox_ProductDetails
             // 
@@ -287,6 +288,10 @@
             this.richTextBox_ProductDetails.Size = new System.Drawing.Size(330, 417);
             this.richTextBox_ProductDetails.TabIndex = 113;
             this.richTextBox_ProductDetails.Tag = "Information";
+
+            this.richTextBox_ProductDetails.SelectAll();
+            this.richTextBox_ProductDetails.SelectionAlignment = System.Windows.Forms.HorizontalAlignment.Center;
+
             this.richTextBox_ProductDetails.Text = "Descripción del producto seleccionado.";
             // 
             // SearchWindow
